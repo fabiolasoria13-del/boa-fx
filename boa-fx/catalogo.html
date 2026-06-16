@@ -425,7 +425,9 @@
       .filter-tab { flex-shrink: 0; min-height: 36px; }
       .filter-sort { display: none; }
 
-      .catalog-hero { padding-top: calc(64px + 28px); padding-bottom: 24px; }
+      .catalog-hero { padding-top: calc(64px + 8px); padding-bottom: 12px; }
+      .catalog-hero-title, .catalog-hero-label { display: none; }
+      .catalog-hero-inner > div:last-child { display: none; }
       .catalog-body { padding: 24px 0 60px; }
 
       .prod-add-btn { min-height: 44px; padding: 12px 8px; }
@@ -1246,7 +1248,7 @@ function generateSpecs(p) {
     if (n.includes('BOCA'))     tipo = 'Prostético oral';
     if (n.includes('OJO'))      tipo = 'Prostético ocular';
     if (n.includes('CUERNO') || n.includes('COLMILLO')) tipo = 'Accesorio facial';
-    if (n.includes('HERIDA') || n.includes('CORTADA') || n.includes('RASGUÑO') || n.includes('GOLPE') || n.includes('BALA')) { tipo = 'Efecto de herida'; mat = 'Látex flexible'; }
+    if (n.includes('HERIDA') || n.includes('CORTADA') || n.includes('RASGUÑO') || n.includes('GOLPE') || n.includes('BALA')) { tipo = 'Efecto de herida'; mat = 'Silicona'; }
     if (n.includes('HÍBRIDO'))  { tipo = 'Prostético complejo'; mat = 'Silicona'; }
     return [
       { l:'TIPO',          v: tipo },
