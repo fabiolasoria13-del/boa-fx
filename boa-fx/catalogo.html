@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tienda en Línea — BOA FX</title>
+  <meta name="description" content="Catálogo completo de prostéticos, materiales FX y complementos. BOA FX — Fabricado en México." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void:     #0C0B0A;
+      --smoke:    #1D1B18;
+      --ash:      #2E2B27;
+      --carbon:   #3D3A34;
+      --tungsten: #C41E2E;
+      --latex:    #C4A882;
+      --ivory:    #EDE8DC;
+      --bone:     #B8B0A4;
+      --ghost:    #6B6560;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'Outfit', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --max-w: 1440px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { background: var(--void); color: var(--ivory); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* GRAIN */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 9999; opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* CONTAINER */
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 80px); }
+
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; font-family: var(--font-body); font-weight: 600; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: var(--tungsten); color: var(--ivory); }
+    .btn-primary:hover { background: #e0253a; transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: var(--ivory); border: 1px solid rgba(237,232,220,0.25); }
+    .btn-ghost:hover { border-color: var(--ivory); }
+    .btn-wa { background: #25D366; color: #fff; }
+    .btn-wa:hover { background: #20b958; }
+    .btn-wa svg { width: 16px; height: 16px; fill: #fff; }
+
+    /* ============ NAV ============ */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 14px clamp(20px, 4vw, 80px);
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(12,11,10,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-logo { display: flex; align-items: center; }
+    .nav-logo img { height: 64px; width: auto; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
+    .nav-links a { font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--bone); transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--ivory); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown > a::after { content: ' ▾'; font-size: 9px; opacity: 0.6; }
+    .nav-dropdown-menu {
+      position: absolute; top: calc(100% + 18px); left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: rgba(12,11,10,0.97); backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.08); min-width: 180px; padding: 8px 0;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
+    .nav-dropdown-menu a { display: block; padding: 10px 20px; font-size: 12px; color: var(--bone); letter-spacing: 0.08em; transition: color 0.15s, background 0.15s; }
+    .nav-dropdown-menu a:hover { color: var(--tungsten); background: rgba(255,255,255,0.03); }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-wa { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #25D366; transition: opacity 0.2s; }
+    .nav-wa:hover { opacity: 0.8; }
+    .nav-wa svg { width: 16px; height: 16px; fill: #25D366; }
+    .nav-cart { position: relative; color: var(--bone); transition: color 0.2s; cursor: pointer; background: none; border: none; }
+    .nav-cart:hover { color: var(--ivory); }
+    .nav-cart svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+    .nav-cart-count { position: absolute; top: -6px; right: -8px; background: var(--tungsten); color: var(--ivory); font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .nav-hamburger span { display: block; width: 24px; height: 1.5px; background: var(--ivory); transition: all 0.3s; }
+
+    /* Mobile menu */
+    .nav-mobile { display: none; position: fixed; inset: 0; background: rgba(12,11,10,0.98); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a { font-family: var(--font-display); font-size: 38px; color: var(--ivory); letter-spacing: 0.04em; transition: color 0.2s; }
+    .nav-mobile a:hover { color: var(--tungsten); }
+    .nav-mobile-close { position: absolute; top: 24px; right: clamp(20px,4vw,80px); font-size: 28px; color: var(--bone); cursor: pointer; }
+
+    /* ============ CATALOG HERO ============ */
+    .catalog-hero {
+      padding-top: calc(72px + clamp(48px, 7vw, 80px));
+      padding-bottom: clamp(40px, 5vw, 64px);
+      background: var(--void);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .catalog-hero-inner {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .catalog-hero-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--tungsten); margin-bottom: 10px; }
+    .catalog-hero-title { font-family: var(--font-display); font-size: clamp(48px, 7vw, 96px); line-height: 0.92; color: var(--ivory); }
+    .catalog-hero-count { font-family: var(--font-mono); font-size: 11px; color: var(--ghost); letter-spacing: 0.1em; }
+
+    /* ============ FILTER BAR ============ */
+    .filter-bar {
+      position: sticky;
+      top: 72px;
+      z-index: 100;
+      background: rgba(12,11,10,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 14px 0;
+    }
+    .filter-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    /* Search */
+    .filter-search {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+      max-width: 280px;
+    }
+    .filter-search input {
+      width: 100%;
+      background: var(--ash);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: var(--ivory);
+      font-family: var(--font-body);
+      font-size: 13px;
+      padding: 9px 12px 9px 34px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .filter-search input:focus { border-color: var(--tungsten); }
+    .filter-search input::placeholder { color: var(--ghost); }
+    .filter-search-icon {
+      position: absolute;
+      left: 10px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--ghost);
+      font-size: 13px;
+      pointer-events: none;
+    }
+    /* Category tabs */
+    .filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filter-tab {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ghost);
+      padding: 7px 14px;
+      border: 1px solid rgba(255,255,255,0.07);
+      cursor: pointer;
+      transition: all 0.18s;
+      white-space: nowrap;
+      background: none;
+    }
+    .filter-tab:hover { color: var(--bone); border-color: rgba(255,255,255,0.15); }
+    .filter-tab.active { color: var(--tungsten); border-color: var(--tungsten); background: rgba(196,30,46,0.07); }
+    /* Sort */
+    .filter-sort {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-sort label { font-family: var(--font-mono); font-size: 10px; color: var(--ghost); letter-spacing: 0.1em; white-space: nowrap; }
+    .filter-sort select {
+      background: var(--ash);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: var(--bone);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 7px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* ============ PRODUCT GRID ============ */
+    .catalog-body { padding: 40px 0 80px; }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    /* No results */
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .no-results-icon { font-size: 48px; opacity: 0.3; margin-bottom: 16px; }
+    .no-results h3 { font-family: var(--font-display); font-size: 28px; color: var(--ivory); margin-bottom: 8px; }
+    .no-results p { font-family: var(--font-mono); font-size: 12px; color: var(--ghost); }
+
+    /* Product card */
+    .prod-card {
+      background: var(--smoke);
+      border: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s var(--ease-out), border-color 0.25s;
+      cursor: pointer;
+    }
+    .prod-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.12); }
+    .prod-thumb {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    /* Hover image swap */
+    .prod-img-primary,
+    .prod-img-hover {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transition: opacity 0.45s ease;
+    }
+    /* FADE HOVER — imagen resultado */
+    .prod-img-primary,
+    .prod-img-hover {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transition: opacity 0.45s ease;
+    }
+    .prod-img-hover { opacity: 0; }
+    .prod-card.con-preview:hover .prod-img-hover  { opacity: 1; }
+    .prod-card.con-preview:hover .prod-img-primary { opacity: 0; }
+    /* Etiqueta "VER RESULTADO" */
+    .prod-hover-hint {
+      position: absolute;
+      bottom: 10px; right: 10px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: var(--ivory);
+      background: rgba(0,0,0,0.6);
+      padding: 4px 8px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .prod-card:hover .prod-hover-hint { opacity: 1; }
+    /* Cinematic placeholders per category */
+    .thumb-prostético   { background: radial-gradient(ellipse at 30% 60%, #2b1a0a 0%, #0f0d0a 70%); }
+    .thumb-prostético::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 25% 55%, rgba(196,30,46,0.15) 0%, transparent 55%); }
+    .thumb-complemento  { background: radial-gradient(ellipse at 50% 70%, #1a0d10 0%, #0a0808 70%); }
+    .thumb-complemento::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 75%, rgba(122,0,0,0.2) 0%, transparent 55%); }
+    .thumb-material     { background: radial-gradient(ellipse at 60% 40%, #1e1a12 0%, #0d0c0a 70%); }
+    .thumb-material::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 65% 35%, rgba(196,168,130,0.1) 0%, transparent 50%); }
+    .thumb-servicio     { background: radial-gradient(ellipse at 40% 50%, #101820 0%, #090b10 70%); }
+
+    .prod-icon {
+      font-size: 40px;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 0 20px rgba(0,0,0,0.8));
+      opacity: 0.75;
+    }
+    .prod-badge {
+      position: absolute;
+      top: 10px; left: 10px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      padding: 3px 8px;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+    .badge-prostético { border: 1px solid var(--tungsten); color: var(--tungsten); }
+    .badge-complemento { border: 1px solid #8B0000; color: #cc3333; }
+    .badge-material { border: 1px solid var(--latex); color: var(--latex); }
+    .badge-servicio { border: 1px solid #25D366; color: #25D366; }
+
+    .prod-body { padding: 14px 16px 18px; display: flex; flex-direction: column; flex: 1; }
+    .prod-name {
+      font-family: var(--font-display);
+      font-size: clamp(14px, 1.2vw, 17px);
+      color: var(--ivory);
+      line-height: 1.15;
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+      flex: 1;
+    }
+    .prod-price {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--tungsten);
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+    .prod-price.cotiza-price {
+      color: #25D366;
+      font-size: 18px;
+      letter-spacing: 0.06em;
+    }
+    .prod-add-btn {
+      width: 100%;
+      background: var(--ash);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--bone);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .prod-add-btn:hover { background: var(--tungsten); border-color: var(--tungsten); color: var(--ivory); }
+    .prod-add-btn.added { background: #1a6b35; border-color: #25D366; color: #25D366; }
+
+    /* Servicio especial */
+    .prod-card.servicio-card { border-color: rgba(37,211,102,0.1); }
+    .prod-card.servicio-card .prod-add-btn:hover { background: #25D366; border-color: #25D366; color: #fff; }
+
+    /* ============ CART DRAWER ============ */
+    .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+    .cart-drawer { position: fixed; top: 0; right: 0; width: min(420px, 100vw); height: 100%; background: var(--smoke); z-index: 1200; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.4s var(--ease-out); border-left: 1px solid rgba(255,255,255,0.06); }
+    .cart-drawer.open { transform: translateX(0); }
+    .cart-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 28px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .cart-title { font-family: var(--font-display); font-size: 22px; color: var(--ivory); letter-spacing: 0.04em; }
+    .cart-close { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--bone); font-size: 20px; cursor: pointer; border: 1px solid rgba(255,255,255,0.08); transition: all 0.2s; }
+    .cart-close:hover { color: var(--ivory); border-color: rgba(255,255,255,0.2); }
+    .cart-items { flex: 1; overflow-y: auto; padding: 20px 28px; display: flex; flex-direction: column; gap: 14px; }
+    .cart-items::-webkit-scrollbar { width: 4px; }
+    .cart-items::-webkit-scrollbar-thumb { background: var(--ash); border-radius: 2px; }
+    .cart-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: var(--ash); border: 1px solid rgba(255,255,255,0.05); }
+    .cart-item-icon { width: 48px; height: 48px; flex-shrink: 0; background: var(--carbon); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name { font-size: 13px; font-weight: 600; color: var(--ivory); line-height: 1.3; margin-bottom: 4px; }
+    .cart-item-cat { font-family: var(--font-mono); font-size: 10px; color: var(--ghost); letter-spacing: 0.1em; }
+    .cart-item-controls { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    .cart-qty-btn { width: 24px; height: 24px; border: 1px solid rgba(255,255,255,0.1); background: none; color: var(--bone); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+    .cart-qty-btn:hover { border-color: var(--tungsten); color: var(--tungsten); }
+    .cart-qty { font-family: var(--font-mono); font-size: 13px; color: var(--ivory); min-width: 20px; text-align: center; }
+    .cart-remove { font-size: 11px; color: var(--ghost); cursor: pointer; transition: color 0.15s; }
+    .cart-remove:hover { color: var(--tungsten); }
+    .cart-item-price { font-family: var(--font-display); font-size: 18px; color: var(--tungsten); white-space: nowrap; flex-shrink: 0; }
+    .cart-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--ghost); padding: 40px; text-align: center; }
+    .cart-empty-icon { font-size: 48px; opacity: 0.3; }
+    .cart-empty p { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; line-height: 1.6; }
+    .cart-footer { padding: 20px 28px 28px; border-top: 1px solid rgba(255,255,255,0.06); background: var(--void); }
+    .cart-subtotal { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .cart-subtotal-label { font-family: var(--font-mono); font-size: 11px; color: var(--ghost); letter-spacing: 0.1em; }
+    .cart-subtotal-amount { font-family: var(--font-display); font-size: 28px; color: var(--ivory); }
+    .cart-note { font-family: var(--font-mono); font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; margin-bottom: 16px; line-height: 1.6; }
+    .cart-wa-btn { width: 100%; background: #25D366; color: #fff; border: none; padding: 16px 24px; font-family: var(--font-body); font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background 0.2s, transform 0.15s; }
+    .cart-wa-btn:hover { background: #20b958; transform: translateY(-1px); }
+    .cart-wa-btn:disabled { background: var(--ash); color: var(--ghost); cursor: not-allowed; transform: none; }
+    .cart-wa-btn svg { width: 18px; height: 18px; fill: #fff; flex-shrink: 0; }
+
+    /* Toast */
+    .cart-toast { position: fixed; bottom: 90px; right: 28px; background: var(--ash); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--tungsten); padding: 12px 18px; font-size: 13px; color: var(--ivory); z-index: 2000; transform: translateY(20px); opacity: 0; transition: all 0.3s var(--ease-out); max-width: 280px; pointer-events: none; }
+    .cart-toast.show { transform: translateY(0); opacity: 1; }
+    .cart-toast strong { color: var(--tungsten); display: block; font-size: 10px; font-family: var(--font-mono); letter-spacing: 0.12em; margin-bottom: 3px; }
+
+    /* WA Float */
+    .wa-float { position: fixed; bottom: 28px; right: 28px; z-index: 900; display: flex; align-items: center; gap: 10px; background: #25D366; color: #fff; padding: 14px 20px; border-radius: 50px; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; box-shadow: 0 8px 32px rgba(37,211,102,0.35); transition: all 0.3s var(--ease-out); cursor: pointer; text-decoration: none; }
+    .wa-float:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(37,211,102,0.45); }
+    .wa-float svg { width: 20px; height: 20px; fill: #fff; }
+
+    /* Footer */
+    footer { background: var(--void); border-top: 1px solid rgba(255,255,255,0.06); padding: 40px 0 24px; margin-top: 0; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-copy { font-family: var(--font-mono); font-size: 11px; color: var(--ghost); }
+    .footer-social { display: flex; gap: 20px; }
+    .footer-social a { font-family: var(--font-mono); font-size: 11px; color: var(--ghost); letter-spacing: 0.1em; transition: color 0.2s; }
+    .footer-social a:hover { color: var(--tungsten); }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1200px) { .catalog-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 900px)  { .catalog-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) {
+      .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .prod-thumb { aspect-ratio: 1 / 1; height: auto; }
+      .prod-icon { font-size: 28px; }
+      .nav-links, .nav-wa { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-logo img { height: 44px; }
+
+      .filter-inner { flex-direction: column; gap: 8px; align-items: stretch; }
+      .filter-search { max-width: 100%; flex: none; width: 100%; }
+      .filter-tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; width: 100%; padding-bottom: 2px; }
+      .filter-tabs::-webkit-scrollbar { display: none; }
+      .filter-tab { flex-shrink: 0; min-height: 36px; }
+      .filter-sort { display: none; }
+
+      .catalog-hero { padding-top: calc(64px + 28px); padding-bottom: 24px; }
+      .catalog-body { padding: 24px 0 60px; }
+
+      .prod-add-btn { min-height: 44px; padding: 12px 8px; }
+      .prod-name { font-size: 13px; }
+      .prod-price { font-size: 18px; }
+      .prod-body { padding: 10px 12px 14px; }
+
+      .disclaimer-overlay { padding: 12px; }
+      .disclaimer-box { padding: 18px 16px 14px; max-height: 85vh; }
+      .disclaimer-logo { font-size: 10px; margin-bottom: 10px; }
+      .disclaimer-title { font-size: 22px; margin-bottom: 2px; }
+      .disclaimer-subtitle { font-size: 9px; margin-bottom: 14px; }
+      .disclaimer-divider { margin: 8px 0; }
+      .disclaimer-item { margin-bottom: 8px; gap: 8px; }
+      .disclaimer-icon { font-size: 14px; }
+      .disclaimer-item-title { font-size: 9px; margin-bottom: 2px; }
+      .disclaimer-item-text { font-size: 11px; line-height: 1.45; }
+      .disclaimer-footer { margin-top: 14px; gap: 6px; }
+      .disclaimer-accept { padding: 12px; font-size: 11px; }
+      .disclaimer-back { padding: 9px; font-size: 10px; }
+      .disclaimer-legal { font-size: 8px; margin-top: 4px; }
+      .modal-body { padding: 18px 20px 22px; }
+    }
+    @media (max-width: 400px) {
+      .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    }
+    /* ====== DISCLAIMER MODAL ====== */
+    .disclaimer-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 2000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+    .disclaimer-box {
+      background: var(--smoke);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-top: 3px solid var(--tungsten);
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 36px 36px 28px;
+    }
+    .disclaimer-box::-webkit-scrollbar { width: 4px; }
+    .disclaimer-box::-webkit-scrollbar-thumb { background: var(--ash); }
+    .disclaimer-logo {
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      color: var(--ghost);
+      margin-bottom: 20px;
+    }
+    .disclaimer-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 5vw, 38px);
+      color: var(--ivory);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .disclaimer-title span { color: var(--tungsten); }
+    .disclaimer-subtitle {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ghost);
+      letter-spacing: 0.12em;
+      margin-bottom: 28px;
+    }
+    .disclaimer-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 20px 0; }
+    .disclaimer-item {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 18px;
+      align-items: flex-start;
+    }
+    .disclaimer-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .disclaimer-item-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--tungsten);
+      margin-bottom: 5px;
+    }
+    .disclaimer-item-text {
+      font-size: 13px;
+      color: var(--bone);
+      line-height: 1.65;
+    }
+    .disclaimer-footer {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .disclaimer-accept {
+      width: 100%;
+      padding: 15px;
+      background: var(--tungsten);
+      color: var(--ivory);
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .disclaimer-accept:hover { background: #e0253a; }
+    .disclaimer-back {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: var(--ghost);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.07);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+    .disclaimer-back:hover { color: var(--bone); border-color: rgba(255,255,255,0.15); }
+    .disclaimer-legal {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--ghost);
+      letter-spacing: 0.08em;
+      text-align: center;
+      margin-top: 6px;
+      line-height: 1.6;
+      opacity: 0.7;
+    }
+    /* ====== PRODUCT MODAL ====== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1300;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: var(--smoke);
+      border: 1px solid rgba(255,255,255,0.08);
+      width: 100%;
+      max-width: 460px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.35s var(--ease-out);
+    }
+    .modal-box::-webkit-scrollbar { width: 4px; }
+    .modal-box::-webkit-scrollbar-thumb { background: var(--ash); }
+    .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+    .modal-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--bone); font-size: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer; z-index: 2;
+      transition: all 0.2s;
+    }
+    .modal-close:hover { color: var(--ivory); border-color: rgba(255,255,255,0.2); }
+    .modal-thumb {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      height: auto;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      background: #0a0908;
+    }
+    .modal-thumb img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      transition: opacity 0.4s ease;
+      position: absolute; inset: 0;
+    }
+    .modal-thumb img.hidden { opacity: 0; pointer-events: none; }
+    .modal-icon { font-size: 56px; position: relative; z-index: 1; }
+    /* Flechas del modal */
+    .modal-arrow {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      width: 36px; height: 36px;
+      background: rgba(0,0,0,0.65);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--ivory);
+      font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s, border-color 0.2s;
+      user-select: none;
+    }
+    .modal-arrow:hover { background: rgba(196,30,46,0.7); border-color: var(--tungsten); }
+    .modal-arrow-left  { left: 10px; }
+    .modal-arrow-right { right: 10px; }
+    /* Dots indicadores */
+    .modal-dots {
+      position: absolute;
+      bottom: 10px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 10;
+    }
+    .modal-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .modal-dot.active { background: var(--tungsten); }
+    /* Label de imagen */
+    .modal-img-label {
+      position: absolute;
+      top: 10px; left: 10px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      color: rgba(237,232,220,0.6);
+      background: rgba(0,0,0,0.5);
+      padding: 3px 8px;
+      z-index: 10;
+    }
+    .modal-body { padding: 24px 28px 28px; }
+    .modal-badge {
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.14em; color: var(--tungsten);
+      margin-bottom: 8px; display: block;
+    }
+    .modal-name {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 4vw, 30px);
+      color: var(--ivory); line-height: 1.05;
+      margin-bottom: 16px;
+    }
+    .modal-price {
+      font-family: var(--font-display);
+      font-size: 28px; color: var(--tungsten);
+      margin-bottom: 20px;
+    }
+    .modal-price.cotiza-price {
+      color: #25D366;
+      font-size: 22px;
+      letter-spacing: 0.04em;
+    }
+    .modal-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 16px 0; }
+    .modal-specs-title { font-family: var(--font-mono); font-size: 10px; color: var(--ghost); letter-spacing: 0.14em; margin-bottom: 12px; }
+    .modal-specs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+    .modal-spec-row {
+      display: flex; gap: 12px;
+      font-size: 13px; line-height: 1.4;
+    }
+    .modal-spec-label {
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--ghost); letter-spacing: 0.1em;
+      min-width: 110px; flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .modal-spec-val { color: var(--bone); }
+    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+    .modal-add-btn {
+      width: 100%; padding: 14px;
+      background: var(--tungsten); color: var(--ivory);
+      font-family: var(--font-body); font-weight: 700;
+      font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.2s;
+    }
+    .modal-add-btn:hover { background: #e0253a; }
+    .modal-add-btn.added { background: #1a6b35; }
+    .modal-wa-btn {
+      width: 100%; padding: 14px;
+      background: #25D366; color: #fff;
+      font-family: var(--font-body); font-weight: 700;
+      font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .modal-wa-btn:hover { background: #20b958; }
+    .modal-wa-btn svg { width: 16px; height: 16px; fill: #fff; }
+    .modal-wa-note { font-family: var(--font-mono); font-size: 10px; color: var(--ghost); text-align: center; margin-top: 10px; letter-spacing: 0.08em; }
+
+    /* PRE-PAINTED CHECKBOX */
+    .prepaint-option {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid rgba(196,30,46,0.3);
+      background: rgba(196,30,46,0.06);
+      cursor: pointer;
+    }
+    .prepaint-option input[type="checkbox"] {
+      width: 18px; height: 18px; flex-shrink: 0;
+      accent-color: var(--tungsten); cursor: pointer; margin-top: 2px;
+    }
+    .prepaint-option .prepaint-text {
+      font-family: var(--font-body); font-size: 12px;
+      color: var(--bone); line-height: 1.5;
+    }
+    .prepaint-option .prepaint-text strong {
+      color: var(--ivory); font-size: 13px; display: block; margin-bottom: 2px;
+    }
+    .prepaint-option .prepaint-text small {
+      color: var(--ghost); font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ====== DISCLAIMER ====== -->
+<div class="disclaimer-overlay" id="disclaimerOverlay">
+  <div class="disclaimer-box">
+    <div class="disclaimer-logo">BOA FX — MAKEUP AND VISUAL EFFECTS</div>
+    <h2 class="disclaimer-title">AVISO<br><span>IMPORTANTE.</span></h2>
+    <p class="disclaimer-subtitle">✦ LEE ANTES DE CONTINUAR</p>
+
+    <div class="disclaimer-item">
+      <div class="disclaimer-icon">⚠️</div>
+      <div>
+        <div class="disclaimer-item-title">USO Y RESPONSABILIDAD</div>
+        <p class="disclaimer-item-text">El uso de cada producto es responsabilidad exclusiva del comprador. BOA FX no se hace responsable por un uso incorrecto o fuera de las instrucciones recomendadas.</p>
+      </div>
+    </div>
+
+    <div class="disclaimer-divider"></div>
+
+    <div class="disclaimer-item">
+      <div class="disclaimer-icon">🩺</div>
+      <div>
+        <div class="disclaimer-item-title">ALERGIAS</div>
+        <p class="disclaimer-item-text">Si tienes historial de alergia a látex, silicona, adhesivos o pigmentos, <strong style="color:var(--ivory);">no adquieras el producto.</strong> Si decides comprarlo, la responsabilidad es tuya. Realiza siempre una prueba de parche antes de la aplicación.</p>
+      </div>
+    </div>
+
+    <div class="disclaimer-divider"></div>
+
+    <div class="disclaimer-item">
+      <div class="disclaimer-icon">🧤</div>
+      <div>
+        <div class="disclaimer-item-title">USO DE QUÍMICOS</div>
+        <p class="disclaimer-item-text">Al manipular solventes, removedores, silicona u otros químicos, <strong style="color:var(--ivory);">usa siempre guantes, careta y ventilación adecuada.</strong> BOA FX no se responsabiliza por accidentes derivados del incumplimiento de estas medidas.</p>
+      </div>
+    </div>
+
+    <div class="disclaimer-footer">
+      <button class="disclaimer-accept" onclick="acceptDisclaimer()">
+        Entiendo y acepto — Continuar a la tienda
+      </button>
+      <a href="index.html" class="disclaimer-back">← Volver al inicio</a>
+      <p class="disclaimer-legal">
+        Al continuar navegando en esta tienda confirmas haber leído y aceptado este aviso.<br>
+        BOA FX · Fabricado en México
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PRODUCT MODAL ====== -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box" id="modalBox">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-thumb" id="modalThumb">
+      <div class="modal-icon" id="modalIcon"></div>
+      <span class="modal-img-label" id="modalImgLabel"></span>
+      <button class="modal-arrow modal-arrow-left"  id="modalArrowL" onclick="modalPrevImg()" style="display:none">‹</button>
+      <button class="modal-arrow modal-arrow-right" id="modalArrowR" onclick="modalNextImg()" style="display:none">›</button>
+      <div class="modal-dots" id="modalDots"></div>
+    </div>
+    <div class="modal-body">
+      <span class="modal-badge" id="modalBadge"></span>
+      <div class="modal-name" id="modalName"></div>
+      <div class="modal-price" id="modalPrice"></div>
+      <div class="modal-divider"></div>
+      <div class="modal-specs-title">ESPECIFICACIONES</div>
+      <div class="modal-specs" id="modalSpecs"></div>
+      <div class="modal-actions" id="modalActions"></div>
+      <p class="modal-wa-note" id="modalNote"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== CART DRAWER ====== -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <span class="cart-title">TU PEDIDO</span>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <div class="cart-empty-icon">🛒</div>
+      <p>Tu carrito está vacío.<br>Agrega productos para<br>continuar.</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-subtotal">
+      <span class="cart-subtotal-label">TOTAL ESTIMADO</span>
+      <span class="cart-subtotal-amount" id="cartTotal">$0 MXN</span>
+    </div>
+    <p class="cart-note">✦ El precio final se confirma por WhatsApp · Envíos a todo México · Entregas personales en CDMX</p>
+    <button class="cart-wa-btn" id="cartWaBtn" onclick="sendToWhatsApp()" disabled>
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Enviar pedido por WhatsApp
+    </button>
+  </div>
+</div>
+<div class="cart-toast" id="cartToast"><strong>✦ AGREGADO</strong><span id="cartToastMsg"></span></div>
+
+<!-- ====== NAV ====== -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="BOA FX" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span style="display:none;font-family:var(--font-display);font-size:26px;letter-spacing:0.06em;color:var(--ivory);">BOA <b style="color:var(--tungsten)">FX</b></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown">
+      <a href="catalogo.html" class="active">Tienda en línea</a>
+      <div class="nav-dropdown-menu">
+        <a href="catalogo.html?cat=Prostéticos">Prostéticos</a>
+        <a href="catalogo.html?cat=Materiales">Materiales FX</a>
+        <a href="catalogo.html?cat=Complementos">Complementos</a>
+      </div>
+    </li>
+    <li><a href="contacto.html">Contacto</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-wa" href="https://wa.me/525564821935" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Escríbenos
+    </a>
+    <button class="nav-cart" id="navCartBtn" aria-label="Carrito">
+      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="nav-cart-count" id="cartCount">0</span>
+    </button>
+    <div class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="nav-mobile" id="mobileMenu">
+  <span class="nav-mobile-close" id="mobileClose">✕</span>
+  <a href="index.html" onclick="closeMobile()">Home</a>
+  <a href="catalogo.html" onclick="closeMobile()">Tienda en línea</a>
+  <a href="catalogo.html?cat=Prostéticos" onclick="closeMobile()" style="font-size:26px;opacity:0.6;">— Prostéticos</a>
+  <a href="catalogo.html?cat=Materiales" onclick="closeMobile()" style="font-size:26px;opacity:0.6;">— Materiales FX</a>
+  <a href="catalogo.html?cat=Complementos" onclick="closeMobile()" style="font-size:26px;opacity:0.6;">— Complementos</a>
+  <a href="contacto.html" onclick="closeMobile()">Contacto</a>
+  <a href="https://wa.me/525564821935" style="color:#25D366;" target="_blank">WhatsApp ↗</a>
+</div>
+
+<!-- ====== CATALOG HERO ====== -->
+<div class="catalog-hero">
+  <div class="container">
+    <div class="catalog-hero-inner">
+      <div>
+        <p class="catalog-hero-label">✦ Fabricado en México</p>
+        <h1 class="catalog-hero-title" id="catalogTitle">TIENDA<br>EN LÍNEA.</h1>
+      </div>
+      <div style="text-align:right;">
+        <p style="font-family:var(--font-mono);font-size:10px;color:var(--ghost);letter-spacing:0.08em;">PEDIDOS VÍA WHATSAPP</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== FILTER BAR ====== -->
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-inner">
+      <div class="filter-search">
+        <span class="filter-search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar producto..." autocomplete="off" />
+      </div>
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab active" data-cat="Todos">Todos</button>
+        <button class="filter-tab" data-cat="Prostéticos">Prostéticos</button>
+        <button class="filter-tab" data-cat="Complementos">Complementos</button>
+        <button class="filter-tab" data-cat="Materiales">Materiales FX</button>
+        <button class="filter-tab" data-cat="Servicios">Servicios</button>
+      </div>
+      <div class="filter-sort">
+        <label for="sortSelect">Ordenar:</label>
+        <select id="sortSelect">
+          <option value="az">A → Z</option>
+          <option value="price-asc">Precio ↑</option>
+          <option value="price-desc">Precio ↓</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PRODUCT GRID ====== -->
+<div class="catalog-body">
+  <div class="container">
+    <div class="catalog-grid" id="productGrid"></div>
+  </div>
+</div>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="container">
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2024 BOA FX · Fabricado en México · Todos los derechos reservados</div>
+      <div class="footer-social">
+        <a href="https://instagram.com/boafx" target="_blank">Instagram</a>
+        <a href="https://tiktok.com/@boafx" target="_blank">TikTok</a>
+        <a href="https://facebook.com/boafx" target="_blank">Facebook</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- WA Float -->
+<a class="wa-float" href="https://wa.me/525564821935?text=Hola%20BOA%20FX%2C%20quisiera%20más%20información." target="_blank">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+/* =============================================
+   DISCLAIMER — se muestra una vez por sesión
+============================================= */
+function acceptDisclaimer() {
+  sessionStorage.setItem('boafx_disclaimer', '1');
+  const overlay = document.getElementById('disclaimerOverlay');
+  overlay.style.opacity = '0';
+  overlay.style.transition = 'opacity 0.4s';
+  setTimeout(() => overlay.style.display = 'none', 400);
+  document.body.style.overflow = '';
+}
+
+// Mostrar si no ha sido aceptado en esta sesión
+(function() {
+  if (!sessionStorage.getItem('boafx_disclaimer')) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.getElementById('disclaimerOverlay').style.display = 'none';
+  }
+})();
+
+/* =============================================
+   PRODUCTO DATA — CATÁLOGO COMPLETO BOA FX
+============================================= */
+const PRODUCTS = [
+  // ---- PROSTÉTICOS ----
+  { name:'OJO',                        cat:'Prostéticos', price:220,    icon:'👁️', image:'imagenes/ojo.PNG' },
+  { name:'PÓMULOS OPERADOS',           cat:'Prostéticos', price:450,    icon:'🎭' },
+  { name:'NARIZ GRINCH',               cat:'Prostéticos', price:600,    icon:'🎭', image:'imagenes/nariz-grinch.png', imageHover:'imagenes/nariz-grinch-resultado.jpeg' },
+  { name:'NARIZ QUIEN',                cat:'Prostéticos', price:430,    icon:'🎭', image:'imagenes/nariz-quien.png' },
+  { name:'ESTRELLA DE MAR',            cat:'Prostéticos', price:299,    icon:'⭐', image:'imagenes/estrella-de-mar.png', imageHover:'imagenes/estrella-de-mar-resultado.PNG' },
+  { name:'RASGUÑO / ARAÑAZO',          cat:'Prostéticos', price:350,    icon:'🩹', image:'imagenes/rasguño-arañazo.png', imageHover:'imagenes/resultado-arañazo-sarpazo.jpeg' },
+  { name:'NARIZ AVATAR',               cat:'Prostéticos', price:650,    icon:'🎭', image:'imagenes/nariz-avatar.png' },
+  { name:'ESTRELLA DIABÓLICA',         cat:'Prostéticos', price:250,    icon:'⭐', image:'imagenes/estrella-diabolica.png' },
+  { name:'GOLPE PÁRPADO',              cat:'Prostéticos', price:200,    icon:'🩹', image:'imagenes/golpe-parpado.png' },
+  { name:'FRENTE GRINCH',              cat:'Prostéticos', price:450,    icon:'🎭', image:'imagenes/frente-grinch.png' },
+  { name:'LUNA 3D',                    cat:'Prostéticos', price:120,    icon:'🌙', image:'imagenes/luna.png' },
+  { name:'NARIZ ELFO RINOPLASTIA',     cat:'Prostéticos', price:270,    icon:'🧝', image:'imagenes/nariz-elfo.png' },
+  { name:'CORTADA CUELLO',             cat:'Prostéticos', price:399,    icon:'🩹', image:'imagenes/cortada-cuello.png' },
+  { name:'TRIPOFOBIA',                 cat:'Prostéticos', price:250,    icon:'🎭', image:'imagenes/tripofobia.png', imageHover:'imagenes/tripofobia-resultado.JPEG' },
+  { name:'FRENTE VAMPIRO',             cat:'Prostéticos', price:450,    icon:'🧛', image:'imagenes/frente-demonio.png' },
+  { name:'NARIZ TERRIFIER BRUJA',      cat:'Prostéticos', price:400,    icon:'🎭', image:'imagenes/nariz-bruja-terrifier.png', imageHover:'imagenes/resultado-nariz-terrifier-bruja.jpeg' },
+  { name:'BRANQUIAS (2 PZ)',            cat:'Prostéticos', price:440,    icon:'🐟', image:'imagenes/branquias.png', imageHover:'imagenes/branqueas-resultado.PNG' },
+  { name:'ESFINGE',                    cat:'Prostéticos', price:170,    icon:'🎭', image:'imagenes/esfinge-escarificacion.png', imageHover:'imagenes/resultado-esfinge.PNG' },
+  { name:'CUERNOS (2 PZ)',             cat:'Prostéticos', price:499,    icon:'😈', image:'imagenes/cuernos.png', imageHover:'imagenes/cuernos-resultado.PNG' },
+  { name:'NARIZ CERDO',                cat:'Prostéticos', price:499,    icon:'🐽', image:'imagenes/nariz-cerdo.png' },
+  { name:'ANTIFAZ ZOMBIE',             cat:'Prostéticos', price:590,    icon:'🧟', image:'imagenes/antifaz-zombie.png' },
+  { name:'BOCA ZOMBIE',                cat:'Prostéticos', price:400,    icon:'🧟', image:'imagenes/boca-zombie.png' },
+  { name:'CUERNOS DOBLES (2 PZ)',       cat:'Prostéticos', price:290,    icon:'😈', image:'imagenes/cuernitos-dobles-colmillos.png' },
+  { name:'HÍBRIDO HUMANO',             cat:'Prostéticos', price:3000,   icon:'🎭', image:'imagenes/hibrido-humano.png', imageHover:'imagenes/hibrido-humano-resultado.png' },
+  { name:'HERIDA DE BALA',             cat:'Prostéticos', price:299,    icon:'🩹', image:'imagenes/herida-bala.png', imgFit:'contain' },
+  { name:'HERIDA CHICA (Y)',           cat:'Prostéticos', price:135,    icon:'🩹', image:'imagenes/herida-chica.png' },
+  { name:'HERIDA MEDIANA',             cat:'Prostéticos', price:180,    icon:'🩹', image:'imagenes/herida-md-cortada.png' },
+  { name:'SUTURA INFLAMADA',           cat:'Prostéticos', price:210,    icon:'🩹', image:'imagenes/sutura-inflamada.png', imgFit:'contain' },
+  // ---- COMPLEMENTOS ----
+  { name:'SANGRE FALSA 250 ML',        cat:'Complementos', price:275,   icon:'🩸', image:'imagenes/sangre-falsa-250-ml.png' },
+  { name:'SANGRE FALSA 30 ML',         cat:'Complementos', price:45,    icon:'🩸', image:'imagenes/sangre-falsa-30-ml.png' },
+  { name:'SANGRE COAGULADA 50 ML',     cat:'Complementos', price:140,   icon:'🩸', image:'imagenes/sangre-coagulada-50ml.png' },
+  { name:'SANGRE COAGULADA 30 ML',     cat:'Complementos', price:60,    icon:'🩸', image:'imagenes/sangre-coagulada-30ml.png' },
+  { name:'SANGRE COMESTIBLE 15 ML',    cat:'Complementos', price:95,    icon:'🩸', image:'imagenes/sangre-comestible-15ml.png' },
+  { name:'SANGRE COMESTIBLE 30 ML',    cat:'Complementos', price:180,   icon:'🩸', image:'imagenes/sangre.comestible-30ml.png' },
+  { name:'CALVA LÁTEX',                cat:'Complementos', price:250,   icon:'💀', image:'imagenes/calva-latex.png', imageHover:'imagenes/resultado-calva-de-latex.jpeg' },
+  { name:'DENTADURA KILLER CLOWN',     cat:'Complementos', price:250,   icon:'🦷', image:'imagenes/dentadura-killer.png' },
+  { name:'PESTAÑAS EMPLUMADAS',        cat:'Complementos', price:100,   icon:'✨', image:'imagenes/pestaña-emplumada.png' },
+  // ---- MATERIALES ----
+  { name:'PROSAIDE 15 ML',             cat:'Materiales', price:130,     icon:'🧪', image:'imagenes/prosaide-15-ml.png' },
+  { name:'PROSAIDE 30 ML',             cat:'Materiales', price:260,     icon:'🧪', image:'imagenes/prosaide-30-ml.png' },
+  { name:'PROSAIDE 250 ML',            cat:'Materiales', price:1050,    icon:'🧪', image:'imagenes/prosaide-250.png' },
+  { name:'PROSAIDE 500 ML',            cat:'Materiales', price:1800,    icon:'🧪', image:'imagenes/prosaide-500-ml.png' },
+  { name:'PROSAIDE 1 LT',              cat:'Materiales', price:3300,    icon:'🧪', image:'imagenes/prosaide-1-litro.png' },
+  { name:'BONDO 15 G',                 cat:'Materiales', price:150,     icon:'🔬', image:'imagenes/bondo-15-ml.png' },
+  { name:'BONDO 30 G',                 cat:'Materiales', price:280,     icon:'🔬', image:'imagenes/bondo-30-ml.png' },
+  { name:'BONDO 50 G',                 cat:'Materiales', price:350,     icon:'🔬', image:'imagenes/bondo-50-ml.png' },
+  { name:'BLENDER 15 ML',              cat:'Materiales', price:50,      icon:'💧', image:'imagenes/blender-15-ml.png', imgFit:'contain' },
+  { name:'BLENDER 50 ML',              cat:'Materiales', price:100,     icon:'💧', image:'imagenes/blender-30-ml.png', imgFit:'contain' },
+  { name:'REMOVEDOR 15 ML',            cat:'Materiales', price:160,     icon:'🧴', image:'imagenes/removedor-15-ml.png' },
+  { name:'REMOVEDOR 50 ML',            cat:'Materiales', price:220,     icon:'🧴', image:'imagenes/removedor-50-ml.png' },
+  { name:'LÁTEX NATURAL 1 LT',         cat:'Materiales', price:290,     icon:'💧', image:'imagenes/latex-1-litro.png' },
+  { name:'LÁTEX NATURAL 500 ML',       cat:'Materiales', price:150,     icon:'💧', image:'imagenes/latex-500-ml.png' },
+  { name:'VENDAS DE YESO GYPSONA',     cat:'Materiales', price:95,      icon:'🩹', image:'imagenes/vendas-gypsona.png' },
+  { name:'ALCOHOL ISOPROPÍLICO 1 LT',  cat:'Materiales', price:150,     icon:'🧴', image:'imagenes/alcohol-isopropilico-1-litro.png', imgFit:'contain' },
+  { name:'ALCOHOL ISOPROPÍLICO 500 ML',cat:'Materiales', price:80,      icon:'🧴', image:'imagenes/alcohol-isopropilico-500-ml.png', imgFit:'contain' },
+  { name:'ULTRACAL BULTO',             cat:'Materiales', price:1350,    icon:'🏺', image:'imagenes/ultracal-bulto.png' },
+  { name:'ULTRACAL 1 KG',              cat:'Materiales', price:80,      icon:'🏺', image:'imagenes/ultracal-1-kg.png' },
+  { name:'PLASTILINA ISEMARF',         cat:'Materiales', price:110,     icon:'🎨', image:'imagenes/platilina-escultor-isemarf.png' },
+  { name:'ESPONJA TEXTURA',            cat:'Materiales', price:30,      icon:'🧽', image:'imagenes/esponja-textura.png' },
+  { name:'ALGINATO',                   cat:'Materiales', price:265,     icon:'🔬', image:'imagenes/alginato.png' },
+  { name:'TEXTURIZADORES 5 PZ',        cat:'Materiales', price:450,     icon:'🖌️', image:'imagenes/texturizadores.png' },
+  { name:'CEPILLO DESECHABLE 50 PZ',   cat:'Materiales', price:45,      icon:'🖌️', image:'imagenes/cepillos-desechables.png' },
+  { name:'MINI COTONETES',             cat:'Materiales', price:50,      icon:'🪄', image:'imagenes/mini-cotonetes.png' },
+  { name:'GUANTES DE NITRILO',         cat:'Materiales', price:150,     icon:'🧤', image:'imagenes/guantes-nitrilo.png' },
+  { name:'GELATINA FX 30 G',           cat:'Materiales', price:40,      icon:'🔬', image:'imagenes/gelatina-fax.png' },
+  { name:'PLASTILINA EPÓXICA',         cat:'Materiales', price:220,     icon:'🎨', image:'imagenes/platilina-epoxica.png' },
+  { name:'CABOSIL 250 G',              cat:'Materiales', price:250,     icon:'🔬', image:'imagenes/cabosil.png' },
+  { name:'CABOSIL BOTESITO',           cat:'Materiales', price:50,      icon:'🔬', image:'imagenes/cabosil-botesito.png' },
+  { name:'BALDIEZ 4 OZ',               cat:'Materiales', price:1050,    icon:'🧪', image:'imagenes/baldiez-4-oz.png' },
+  { name:'BALDIEZ 16 OZ',              cat:'Materiales', price:2600,    icon:'🧪', image:'imagenes/baldiez-6-oz.png' },
+  { name:'GLATZAN 1 LT',               cat:'Materiales', price:2700,    icon:'🧪', image:'imagenes/glatzan-1-lt.png' },
+  { name:'GLATZAN 500 ML',             cat:'Materiales', price:1600,    icon:'🧪', image:'imagenes/glatzan-500-ml.png' },
+  { name:'PLATSIL GEL 10 — 2 KG',     cat:'Materiales', price:3380,    icon:'🧪', image:'imagenes/platsil.png' },
+  { name:'DEADENER 1 KG',              cat:'Materiales', price:2700,    icon:'🧪', image:'imagenes/deadener.png' },
+  { name:'DRAGON SKIN KIT 10 (SLOW/M/V/F)', cat:'Materiales', price:990, icon:'🦎', image:'imagenes/dragon-skin-kit.png' },
+  { name:'DRAGON SKIN GALÓN 10 SLOW',  cat:'Materiales', price:5700,    icon:'🦎', image:'imagenes/dragon-skin-10-slow.png' },
+  { name:'DRAGON SKIN GALÓN 10 MEDIUM',cat:'Materiales', price:5900,    icon:'🦎', image:'imagenes/dragon-skin-galon-10-medium.png' },
+  { name:'DRAGON SKIN GALÓN 10 FAST',  cat:'Materiales', price:5700,    icon:'🦎', image:'imagenes/dragon-skin-10-galon.png' },
+  { name:'DRAGON SKIN GALÓN 10 VERY FAST', cat:'Materiales', price:5900, icon:'🦎', image:'imagenes/dragon-skin-very-fast.png' },
+  { name:'PTM',                        cat:'Materiales', price:1850,    icon:'🧪', image:'imagenes/ptm.png' },
+  { name:'PTP',                        cat:'Materiales', price:1790,    icon:'🧪', image:'imagenes/ptp.png' },
+  { name:'FOAM LÁTEX 1 GALÓN MONSTER MAKER', cat:'Materiales', price:6100, icon:'🧪', image:'imagenes/kit-foam-latex.png' },
+  { name:'TATUAJES TEMPORALES GLITTER',cat:'Materiales', price:45,      icon:'✨', image:'imagenes/tatuaje-temporal-glitter.png' },
+  { name:'PUPILENTES ROJOS',           cat:'Materiales', price:170,     icon:'👁️', image:'imagenes/pupilentes-rojos.png' },
+  { name:'PUPILENTES DEMONIO',         cat:'Materiales', price:200,     icon:'👁️', image:'imagenes/pupilentes-demonio.png' },
+  { name:'PUPILENTES BLANCOS REJILLA', cat:'Materiales', price:170,     icon:'👁️', image:'imagenes/pupilentes-blancos-rejilla.png' },
+  { name:'COLMILLOS POSTIZOS',         cat:'Materiales', price:85,      icon:'🦷', image:'imagenes/colmillos-par.png' },
+  { name:'MÁSCARA FACIAL CYBERPUNK',   cat:'Materiales', price:200,     icon:'🎭', image:'imagenes/mascara-cyberpunk.png' },
+  { name:'PUPILENTES ROSAS MUÑECA',    cat:'Materiales', price:175,     icon:'👁️', image:'imagenes/pupilentes-rosas.png' },
+  // ---- SERVICIOS ----
+  { name:'SERVICIO DE MAQUILLAJE SESIÓN',                      cat:'Servicios', price:350, icon:'💄', image:'imagenes/servicio-maquillaje-sesion.png' },
+  { name:'CARACTERIZACIÓN',                                   cat:'Servicios', price:0, cotiza:true, icon:'💄', image:'imagenes/caracterizacion.png' },
+  { name:'FACE CAST',                                         cat:'Servicios', price:0, cotiza:true, icon:'🏺', image:'imagenes/servicio-face-cast.png' },
+  { name:'PROSTÉTICO PERSONALIZADO',                          cat:'Servicios', price:0, cotiza:true, icon:'🎭', image:'imagenes/prostetico-personalizado.png' },
+  { name:'PROP / COMPLEMENTO PARA PRODUCCIÓN O COSPLAY',      cat:'Servicios', price:0, cotiza:true, icon:'🎬', image:'imagenes/prop-complemento-para-produccion.png' },
+];
+
+/* =============================================
+   HELPERS
+============================================= */
+const WA_NUMBER = '525564821935';
+
+function fmt(n) { return '$' + n.toLocaleString('es-MX') + ' MXN'; }
+function slugCat(cat) {
+  return cat.toLowerCase()
+    .replace(/é/g,'e').replace(/ó/g,'o').replace(/á/g,'a')
+    .replace(/\s+/g,'-');
+}
+function thumbClass(cat) {
+  if (cat === 'Prostéticos')  return 'thumb-prostético';
+  if (cat === 'Complementos') return 'thumb-complemento';
+  if (cat === 'Servicios')    return 'thumb-servicio';
+  return 'thumb-material';
+}
+function badgeClass(cat) {
+  if (cat === 'Prostéticos')  return 'badge-prostético';
+  if (cat === 'Complementos') return 'badge-complemento';
+  if (cat === 'Servicios')    return 'badge-servicio';
+  return 'badge-material';
+}
+function badgeLabel(cat) {
+  if (cat === 'Prostéticos')  return 'Prostético';
+  if (cat === 'Complementos') return 'Complemento';
+  if (cat === 'Servicios')    return 'Servicio';
+  return 'Material';
+}
+
+/* =============================================
+   CART — localStorage para persistencia
+============================================= */
+let cart = JSON.parse(localStorage.getItem('boafx_cart') || '[]');
+
+const cartDrawer  = document.getElementById('cartDrawer');
+const cartOverlay = document.getElementById('cartOverlay');
+const cartItemsEl = document.getElementById('cartItems');
+const cartEmptyEl = document.getElementById('cartEmpty');
+const cartTotalEl = document.getElementById('cartTotal');
+const cartWaBtn   = document.getElementById('cartWaBtn');
+const cartCountEl = document.getElementById('cartCount');
+const cartToast   = document.getElementById('cartToast');
+const cartToastMsg= document.getElementById('cartToastMsg');
+
+function saveCart()   { localStorage.setItem('boafx_cart', JSON.stringify(cart)); }
+function openCart()   { cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); document.body.style.overflow='hidden'; }
+function closeCart()  { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); document.body.style.overflow=''; }
+
+document.getElementById('navCartBtn').addEventListener('click', openCart);
+document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileMenu').classList.add('open'));
+document.getElementById('mobileClose').addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+function renderCart() {
+  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  const totalQty = cart.reduce((s,i) => s + i.qty, 0);
+  cartTotalEl.textContent = fmt(total);
+  cartCountEl.textContent = totalQty;
+  cartWaBtn.disabled = cart.length === 0;
+
+  document.querySelectorAll('.cart-item').forEach(el => el.remove());
+
+  if (cart.length === 0) { cartEmptyEl.style.display = 'flex'; return; }
+  cartEmptyEl.style.display = 'none';
+
+  cart.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'cart-item';
+    el.innerHTML = `
+      <div class="cart-item-icon">${item.icon}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-cat">${item.cat}</div>
+        <div class="cart-item-controls">
+          <button class="cart-qty-btn" onclick="changeQty(${idx},-1)">−</button>
+          <span class="cart-qty">${item.qty}</span>
+          <button class="cart-qty-btn" onclick="changeQty(${idx},1)">+</button>
+          <span class="cart-remove" onclick="removeItem(${idx})">✕ quitar</span>
+        </div>
+      </div>
+      <div class="cart-item-price">${fmt(item.price * item.qty)}</div>
+    `;
+    cartItemsEl.appendChild(el);
+  });
+}
+
+function changeQty(idx, delta) {
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  saveCart(); renderCart();
+}
+function removeItem(idx) {
+  cart.splice(idx, 1);
+  saveCart(); renderCart();
+  // Reset button state in grid
+  syncButtonStates();
+}
+
+function addToCart(product, btn) {
+  const existing = cart.find(i => i.name === product.name);
+  if (existing) { existing.qty++; }
+  else { cart.push({ ...product, qty: 1 }); }
+  saveCart(); renderCart();
+  // Toast
+  cartToastMsg.textContent = product.name.length > 34 ? product.name.slice(0,34)+'…' : product.name;
+  cartToast.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => cartToast.classList.remove('show'), 2800);
+  // Button feedback
+  if (btn) {
+    btn.classList.add('added');
+    btn.textContent = '✓ Agregado';
+    setTimeout(() => { btn.classList.remove('added'); btn.textContent = '+ Agregar'; }, 2000);
+  }
+  // Badge bounce
+  cartCountEl.style.transform = 'scale(1.5)';
+  setTimeout(() => cartCountEl.style.transform = 'scale(1)', 200);
+}
+
+function sendToWhatsApp() {
+  if (!cart.length) return;
+  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  const lines = cart.map(i => `• ${i.name} x${i.qty} — ${fmt(i.price * i.qty)}`).join('\n');
+  const msg = `¡Hola BOA FX! Quiero hacer el siguiente pedido:\n\n🛒 *MI PEDIDO:*\n${lines}\n\n*TOTAL ESTIMADO: ${fmt(total)}*\n\n¿Pueden confirmarme disponibilidad y forma de pago? 🙏`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+/* =============================================
+   PRODUCT SPECS GENERATOR
+============================================= */
+function generateSpecs(p) {
+  const n = p.name.toUpperCase();
+  if (p.cat === 'Servicios') {
+    const info = {
+      'CARACTERIZACIÓN':    [{ l:'MODALIDAD', v:'Presencial — CDMX' }, { l:'DURACIÓN', v:'Variable según el personaje' }, { l:'INCLUYE', v:'Maquillaje artístico completo + prostéticos si aplica' }],
+      'FACE CAST':          [{ l:'PROCESO', v:'Vaciado de rostro con alginato y yeso' }, { l:'ENTREGA', v:'Molde listo para uso profesional' }, { l:'MODALIDAD', v:'Presencial — CDMX' }],
+      'PROSTÉTICO PERSONALIZADO': [{ l:'PROCESO', v:'Diseño → Escultura → Molde → Producción' }, { l:'MATERIALES', v:'Silicona' }, { l:'TIEMPO', v:'Variable según complejidad' }],
+      'PROP / COMPLEMENTO PARA PRODUCCIÓN O COSPLAY': [{ l:'APLICA PARA', v:'Cine, teatro, cosplay y fotografía' }, { l:'MATERIALES', v:'Según requerimiento del proyecto' }, { l:'ENTREGA', v:'A convenir' }],
+    };
+    return info[p.name] || [];
+  }
+  if (p.cat === 'Prostéticos') {
+    let tipo = 'Prostético FX';
+    let mat  = 'Silicona';
+    if (n.includes('NARIZ'))    tipo = 'Prostético nasal';
+    const naricesRestringidas = ['NARIZ CERDO', 'NARIZ GRINCH', 'NARIZ QUIEN'];
+    if (naricesRestringidas.some(x => n.includes(x.toUpperCase()))) {
+      return [
+        { l:'TIPO',          v: 'Prostético nasal' },
+        { l:'MATERIAL',      v: 'Silicona' },
+        { l:'APLICACIÓN',    v: 'Prosaide o adhesivo de contacto' },
+        { l:'COMPATIBLE CON',v: 'Pinturas al agua, alcohol y aerógrafo' },
+        { l:'RETIRO',        v: 'Removedor o alcohol isopropílico' },
+        { l:'⚠️ ADVERTENCIA', v: 'Esta pieza cubre parcialmente las fosas nasales. No recomendada para personas con asma, rinitis, ansiedad o dificultad respiratoria. Úsala en espacios ventilados y no excedas el tiempo de uso.' },
+      ];
+    }
+    if (n.includes('FRENTE'))   tipo = 'Prostético frontal';
+    if (n.includes('BOCA'))     tipo = 'Prostético oral';
+    if (n.includes('OJO'))      tipo = 'Prostético ocular';
+    if (n.includes('CUERNO') || n.includes('COLMILLO')) tipo = 'Accesorio facial';
+    if (n.includes('HERIDA') || n.includes('CORTADA') || n.includes('RASGUÑO') || n.includes('GOLPE') || n.includes('BALA')) { tipo = 'Efecto de herida'; mat = 'Látex flexible'; }
+    if (n.includes('HÍBRIDO'))  { tipo = 'Prostético complejo'; mat = 'Silicona'; }
+    return [
+      { l:'TIPO',          v: tipo },
+      { l:'MATERIAL',      v: mat },
+      { l:'APLICACIÓN',    v: 'Prosaide o adhesivo de contacto' },
+      { l:'COMPATIBLE CON',v: 'Pinturas al agua, alcohol y aerógrafo' },
+      { l:'RETIRO',        v: 'Removedor o alcohol isopropílico' },
+    ];
+  }
+  if (p.cat === 'Complementos') {
+    if (n.includes('SANGRE')) {
+      const vol    = (n.match(/\d+\s*ML/) || [''])[0];
+      const formula = n.includes('COMESTIBLE') ? 'Comestible, no tóxica' : 'Fórmula al agua';
+      return [
+        { l:'TIPO',          v: 'Sangre artificial' },
+        { l:'CONTENIDO',     v: vol || '—' },
+        { l:'FÓRMULA',       v: formula },
+        { l:'USO',           v: 'Efectos especiales y maquillaje FX' },
+        { l:'COMPATIBLE CON',v: 'Piel, textiles y accesorios' },
+      ];
+    }
+    if (n.includes('CALVA')) return [
+      { l:'TIPO',       v: 'Calva de látex' },
+      { l:'MATERIAL',   v: 'Látex natural' },
+      { l:'APLICACIÓN', v: 'Prosaide o adhesivo para piel' },
+      { l:'USO',        v: 'Caracterización, cosplay, teatro' },
+    ];
+    return [{ l:'CATEGORÍA', v: 'Complemento FX' }, { l:'USO', v: 'Maquillaje artístico y efectos especiales' }];
+  }
+  if (p.cat === 'Materiales') {
+    if (n.includes('PROSAIDE'))    return [{ l:'TIPO', v:'Adhesivo profesional para piel' }, { l:'USO', v:'Adhesivo para prostéticos de silicona' }, { l:'RETIRO', v:'Removedor o nafta' }];
+    if (n.includes('LÁTEX'))       return [{ l:'TIPO', v:'Látex natural' }, { l:'USO', v:'Fabricación de prostéticos y efectos' }, { l:'ACABADO', v:'Mate traslúcido' }, { l:'COMPATIBLE CON', v:'Pinturas al agua y al aceite' }];
+    if (n.includes('DRAGON SKIN')) return [{ l:'TIPO', v:'Silicona de platino' }, { l:'DUREZA', v:'10A Shore' }, { l:'USO', v:'Moldes y prostéticos de silicona' }];
+    if (n.includes('BONDO'))       return [{ l:'TIPO', v:'Pasta de sellado para silicona' }, { l:'USO', v:'Sellado y acabado de prostéticos' }, { l:'APLICACIÓN', v:'Con espátula o brocha' }];
+    if (n.includes('BLENDER'))     return [{ l:'TIPO', v:'Fundente para silicona' }, { l:'USO', v:'Unión de bordes de prostéticos' }, { l:'APLICACIÓN', v:'Con esponja o brocha fina' }];
+    if (n.includes('REMOVEDOR') || n.includes('ALCOHOL')) return [{ l:'TIPO', v:'Solvente / removedor' }, { l:'USO', v:'Retiro de adhesivos y limpieza' }, { l:'CONCENTRACIÓN', v:'Alta pureza' }];
+    if (n.includes('ALGINATO'))    return [{ l:'TIPO', v:'Alginato para moldes' }, { l:'USO', v:'Moldes rápidos de rostro y cuerpo' }, { l:'TIEMPO DE TRABAJO', v:'2–3 minutos' }];
+    if (n.includes('ULTRACAL'))    return [{ l:'TIPO', v:'Yeso ultra resistente' }, { l:'USO', v:'Moldes de yeso para prostéticos' }, { l:'ACABADO', v:'Alta definición' }];
+    if (n.includes('GLATZAN') || n.includes('PLATZIL') || n.includes('DEADENER') || n.includes('PTM') || n.includes('PTP')) return [{ l:'TIPO', v:'Silicona especial FX' }, { l:'USO', v:'Prostéticos de silicona y efectos especiales' }];
+    if (n.includes('FOAM LÁTEX') || n.includes('MONSTER')) return [{ l:'TIPO', v:'Foam látex profesional' }, { l:'USO', v:'Fabricación de prostéticos ligeros y flexibles' }, { l:'PROCESO', v:'Requiere horno de curado' }];
+    if (n.includes('PUPILENTE'))   return [{ l:'TIPO', v:'Pupilentes de efecto' }, { l:'USO', v:'Caracterización y cosplay' }, { l:'NOTA', v:'Consultar instrucciones de uso y cuidado' }];
+    if (n.includes('PLASTILINA'))  return [{ l:'TIPO', v:'Plastilina para escultura' }, { l:'USO', v:'Escultura de prostéticos y moldes' }];
+    if (n.includes('CABOSIL'))        return [{ l:'TIPO', v:'Agente espesante' }, { l:'USO', v:'Espesar silicona y otros materiales' }];
+    if (n.includes('CEPILLO'))        return [{ l:'TIPO', v:'Cepillo desechable' }, { l:'CONTENIDO', v:'50 piezas' }, { l:'NOTA', v:'*Color al azar' }];
+    if (n.includes('TEXTURIZADOR'))   return [{ l:'TIPO', v:'Set de texturizadores' }, { l:'CONTENIDO', v:'5 piezas' }, { l:'USO', v:'Texturizado de prostéticos y esculturas' }, { l:'NOTA', v:'*Piezas al azar — el surtido puede variar' }];
+    return [{ l:'CATEGORÍA', v:'Material profesional FX' }, { l:'USO', v:'Maquillaje artístico y efectos especiales' }];
+  }
+  return [];
+}
+
+/* =============================================
+   MODAL
+============================================= */
+let currentModalProduct = null;
+let modalImages = [];
+let modalImgIndex = 0;
+
+function buildModalImages(p) {
+  const imgs = [];
+  if (p.image)        imgs.push({ src: p.image,        label: 'PRODUCTO' });
+  if (p.imageHover)   imgs.push({ src: p.imageHover,   label: 'RESULTADO' });
+  if (p.imageDetail)  imgs.push({ src: p.imageDetail,  label: 'DETALLE' });
+  return imgs;
+}
+
+function setModalImage(idx) {
+  modalImgIndex = idx;
+  const imgs = modalImages;
+  const thumb = document.getElementById('modalThumb');
+
+  // Actualizar imágenes
+  thumb.querySelectorAll('img').forEach((img, i) => {
+    img.classList.toggle('hidden', i !== idx);
+  });
+
+  // Label
+  const labelEl = document.getElementById('modalImgLabel');
+  labelEl.textContent = imgs[idx] ? imgs[idx].label : '';
+
+  // Dots
+  document.querySelectorAll('.modal-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+function modalNextImg() {
+  if (modalImages.length < 2) return;
+  setModalImage((modalImgIndex + 1) % modalImages.length);
+}
+function modalPrevImg() {
+  if (modalImages.length < 2) return;
+  setModalImage((modalImgIndex - 1 + modalImages.length) % modalImages.length);
+}
+
+function openModal(p) {
+  currentModalProduct = p;
+  const isCotiza = !!p.cotiza;
+  modalImages = buildModalImages(p);
+  modalImgIndex = 0;
+
+  // Thumb
+  const thumb = document.getElementById('modalThumb');
+  thumb.className = 'modal-thumb ' + (p.image ? '' : thumbClass(p.cat));
+
+  // Limpiar imágenes anteriores
+  thumb.querySelectorAll('img').forEach(el => el.remove());
+  document.getElementById('modalIcon').textContent = p.image ? '' : p.icon;
+
+  // Insertar imágenes si existen
+  if (modalImages.length > 0) {
+    modalImages.forEach((img, i) => {
+      const el = document.createElement('img');
+      el.src = img.src;
+      el.alt = p.name + ' ' + img.label;
+      if (i !== 0) el.classList.add('hidden');
+      thumb.insertBefore(el, thumb.querySelector('.modal-img-label'));
+    });
+  }
+
+  // Flechas y dots
+  const arrowL = document.getElementById('modalArrowL');
+  const arrowR = document.getElementById('modalArrowR');
+  const dotsEl = document.getElementById('modalDots');
+  const hasGallery = modalImages.length > 1;
+
+  arrowL.style.display = hasGallery ? 'flex' : 'none';
+  arrowR.style.display = hasGallery ? 'flex' : 'none';
+
+  dotsEl.innerHTML = hasGallery
+    ? modalImages.map((_, i) => `<div class="modal-dot ${i===0?'active':''}" onclick="setModalImage(${i})"></div>`).join('')
+    : '';
+
+  // Label inicial
+  const labelEl = document.getElementById('modalImgLabel');
+  labelEl.textContent = modalImages[0]?.label || '';
+
+  // Badge
+  document.getElementById('modalBadge').textContent = '✦ ' + badgeLabel(p.cat).toUpperCase();
+
+  // Name
+  document.getElementById('modalName').textContent = p.name;
+
+  // Badge
+  document.getElementById('modalBadge').textContent = '✦ ' + badgeLabel(p.cat).toUpperCase();
+
+  // Name
+  document.getElementById('modalName').textContent = p.name;
+
+  // Price
+  const priceEl = document.getElementById('modalPrice');
+  if (isCotiza) {
+    priceEl.textContent = 'COTIZA';
+    priceEl.className = 'modal-price cotiza-price';
+  } else {
+    priceEl.textContent = fmt(p.price);
+    priceEl.className = 'modal-price';
+  }
+
+  // Specs
+  const specs = generateSpecs(p);
+  const specsEl = document.getElementById('modalSpecs');
+  specsEl.innerHTML = specs.length
+    ? specs.map(s => `<div class="modal-spec-row"><span class="modal-spec-label">${s.l}</span><span class="modal-spec-val">${s.v}</span></div>`).join('')
+    : '<p style="font-size:13px;color:var(--ghost);">Contáctanos para más información.</p>';
+
+  // Actions
+  const actionsEl = document.getElementById('modalActions');
+  const noteEl    = document.getElementById('modalNote');
+
+  if (isCotiza) {
+    const msg = `Hola BOA FX, me interesa cotizar: *${p.name}*. ¿Podrían darme más información?`;
+    actionsEl.innerHTML = `
+      <a class="modal-wa-btn" href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Cotizar por WhatsApp
+      </a>`;
+    noteEl.textContent = '✦ Respuesta en menos de 24 hrs · Los 365 días del año';
+  } else {
+    const isProsthetico = p.cat === 'Prostéticos';
+    actionsEl.innerHTML = `
+      ${isProsthetico ? `
+        <label class="prepaint-option">
+          <input type="checkbox" id="prepaintCheck">
+          <span class="prepaint-text">
+            <strong>Pre-pintado +$50 MXN</strong>
+            Pregunta disponibilidad de colores por WhatsApp
+            <small>Aplica solo en prostéticos</small>
+          </span>
+        </label>
+      ` : ''}
+      <button class="modal-add-btn" id="modalAddBtn">+ Agregar al carrito</button>
+    `;
+    noteEl.textContent = '✦ Precio confirmado por WhatsApp · Envíos a todo México';
+
+    if (isProsthetico) {
+      document.getElementById('prepaintCheck').addEventListener('change', function() {
+        const priceEl = document.getElementById('modalPrice');
+        priceEl.textContent = fmt(p.price + (this.checked ? 50 : 0));
+      });
+    }
+
+    document.getElementById('modalAddBtn').addEventListener('click', function() {
+      const prepaint = isProsthetico && document.getElementById('prepaintCheck')?.checked;
+      const productToAdd = prepaint
+        ? { ...p, name: p.name + ' + Pre-pintado', price: p.price + 50 }
+        : p;
+      addToCart(productToAdd, null);
+      this.classList.add('added');
+      this.textContent = '✓ Agregado al carrito';
+      setTimeout(() => { this.classList.remove('added'); this.textContent = '+ Agregar al carrito'; }, 2000);
+    });
+  }
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modalOverlay')) return;
+  closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+/* =============================================
+   RENDER PRODUCTS
+============================================= */
+let currentCat  = 'Todos';
+let currentSort = 'az';
+let currentQ    = '';
+
+function getFiltered() {
+  let list = [...PRODUCTS];
+  if (currentCat !== 'Todos') list = list.filter(p => p.cat === currentCat);
+  if (currentQ) {
+    const q = currentQ.toLowerCase();
+    list = list.filter(p => p.name.toLowerCase().includes(q));
+  }
+  if (currentSort === 'price-asc')  list.sort((a,b) => a.price - b.price);
+  if (currentSort === 'price-desc') list.sort((a,b) => b.price - a.price);
+  if (currentSort === 'az')         list.sort((a,b) => a.name.localeCompare(b.name, 'es'));
+  return list;
+}
+
+function renderProducts() {
+  const grid = document.getElementById('productGrid');
+  const list = getFiltered();
+  grid.innerHTML = '';
+
+  if (list.length === 0) {
+    grid.innerHTML = `
+      <div class="no-results">
+        <div class="no-results-icon">🔍</div>
+        <h3>Sin resultados</h3>
+        <p>Intenta con otra búsqueda o categoría.</p>
+      </div>`;
+    return;
+  }
+
+  list.forEach(p => {
+    const isCotiza = !!p.cotiza;
+    const card = document.createElement('div');
+    const tienePreview = p.imageHover && (p.cat === 'Prostéticos' || p.name === 'CALVA LÁTEX');
+    card.className = `prod-card${p.cat === 'Servicios' ? ' servicio-card' : ''}${tienePreview ? ' con-preview' : ''}`;
+    card.style.cursor = 'pointer';
+
+    card.innerHTML = `
+      <div class="prod-thumb ${p.image ? '' : thumbClass(p.cat)}" style="${p.image ? 'background:#0a0908;' : ''}">
+        ${p.image ? `
+          <img class="prod-img-primary" src="${p.image}" alt="${p.name}" style="${p.imgFit ? `object-fit:${p.imgFit};padding:${p.imgPad||'12px'}` : ''}${p.imgPos ? `;object-position:${p.imgPos}` : ''}">
+          ${p.imageHover ? `<img class="prod-img-hover" src="${p.imageHover}" alt="${p.name} resultado">` : ''}
+          ${tienePreview ? `<span class="prod-hover-hint">VER RESULTADO →</span>` : ''}
+        ` : `<div class="prod-icon">${p.icon}</div>`}
+        <span class="prod-badge ${badgeClass(p.cat)}">${badgeLabel(p.cat)}</span>
+      </div>
+      <div class="prod-body">
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-price${isCotiza ? ' cotiza-price' : ''}">${isCotiza ? 'COTIZA' : fmt(p.price)}</div>
+        <button class="prod-add-btn" data-name="${p.name}" style="${isCotiza ? 'background:rgba(37,211,102,0.1);border-color:rgba(37,211,102,0.2);color:#25D366;' : ''}">
+          ${isCotiza ? '💬 Cotizar' : '+ Agregar'}
+        </button>
+      </div>
+    `;
+
+    // Click en tarjeta → modal
+    card.addEventListener('click', () => openModal(p));
+
+    // Click en botón → acción directa (sin abrir modal)
+    card.querySelector('.prod-add-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (isCotiza) {
+        const msg = `Hola BOA FX, me interesa cotizar: *${p.name}*. ¿Podrían darme más información?`;
+        window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+      } else {
+        addToCart(p, this);
+      }
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+/* =============================================
+   FILTER EVENTS
+============================================= */
+const TITLES = {
+  'Todos':        'TIENDA<br>EN LÍNEA.',
+  'Prostéticos':  'PROSTÉTICOS.',
+  'Complementos': 'COMPLEMENTOS.',
+  'Materiales':   'MATERIALES<br>FX.',
+  'Servicios':    'SERVICIOS.',
+};
+
+function updateTitle(cat) {
+  document.getElementById('catalogTitle').innerHTML = TITLES[cat] || 'TIENDA<br>EN LÍNEA.';
+}
+
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    currentCat = this.dataset.cat;
+    updateTitle(currentCat);
+    renderProducts();
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  currentQ = this.value.trim();
+  renderProducts();
+});
+
+document.getElementById('sortSelect').addEventListener('change', function() {
+  currentSort = this.value;
+  renderProducts();
+});
+
+/* =============================================
+   URL PARAM — abrir categoría directa
+============================================= */
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  if (cat) {
+    const tab = [...document.querySelectorAll('.filter-tab')].find(t => t.dataset.cat === cat);
+    if (tab) {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentCat = cat;
+      updateTitle(cat);
+    }
+  }
+})();
+
+/* =============================================
+   INIT
+============================================= */
+renderProducts();
+renderCart();
+</script>
+</body>
+</html>

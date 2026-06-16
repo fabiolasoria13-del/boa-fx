@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BOA FX — Mobile Preview</title>
+  <style>
+    :root {
+      --bg: #0a0908;
+      --panel: #141210;
+      --border: rgba(255,255,255,0.07);
+      --accent: #C41E2E;
+      --text: #EDE8DC;
+      --muted: #6B6560;
+      --font: 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+
+      /* Dimensiones del dispositivo */
+      --phone-w: 375px;
+      --phone-h: 812px;
+      --phone-radius: 52px;
+      --phone-border: 12px;
+      --notch-w: 130px;
+      --notch-h: 30px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      background: var(--bg);
+      font-family: var(--font);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ---- GRAIN ---- */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 9999; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ---- HEADER ---- */
+    header {
+      width: 100%;
+      max-width: 960px;
+      padding: 28px 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .header-brand {
+      font-family: 'Bebas Neue', var(--font);
+      font-size: 22px;
+      letter-spacing: 0.1em;
+      color: var(--text);
+    }
+    .header-brand span { color: var(--accent); }
+    .header-sub {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ---- DEVICE SELECTOR ---- */
+    .device-selector {
+      display: flex;
+      gap: 6px;
+    }
+    .device-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .device-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+    .device-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(196,30,46,0.07); }
+
+    /* ---- PAGE SELECTOR ---- */
+    .page-nav {
+      width: 100%;
+      max-width: 960px;
+      padding: 16px 32px 0;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .page-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .page-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+    .page-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(196,30,46,0.07); }
+
+    /* ---- STAGE ---- */
+    .stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px 60px;
+    }
+
+    /* ---- PHONE SHELL ---- */
+    .phone {
+      position: relative;
+      width: calc(var(--phone-w) + var(--phone-border) * 2);
+      height: calc(var(--phone-h) + var(--phone-border) * 2);
+      background: #1a1815;
+      border-radius: var(--phone-radius);
+      border: var(--phone-border) solid #222018;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.08),
+        0 0 0 2px rgba(0,0,0,0.6),
+        inset 0 0 0 1px rgba(255,255,255,0.04),
+        0 40px 120px rgba(0,0,0,0.7),
+        0 20px 60px rgba(0,0,0,0.5);
+      transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+      flex-shrink: 0;
+    }
+
+    /* Botón lateral derecho — power */
+    .phone::before {
+      content: '';
+      position: absolute;
+      right: calc(-1 * var(--phone-border) - 3px);
+      top: 120px;
+      width: 4px;
+      height: 64px;
+      background: #2a2720;
+      border-radius: 0 3px 3px 0;
+      box-shadow: 1px 0 0 rgba(255,255,255,0.05);
+    }
+
+    /* Botones volumen — izquierda */
+    .phone::after {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--phone-border) - 3px);
+      top: 100px;
+      width: 4px;
+      height: 36px;
+      background: #2a2720;
+      border-radius: 3px 0 0 3px;
+      box-shadow:
+        0 54px 0 #2a2720,
+        0 96px 0 0 #2a2720,
+        -1px 0 0 rgba(255,255,255,0.05);
+    }
+
+    /* Screen area */
+    .phone-screen {
+      position: absolute;
+      inset: 0;
+      border-radius: calc(var(--phone-radius) - var(--phone-border));
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* Notch / Dynamic Island */
+    .phone-notch {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: var(--notch-w);
+      height: var(--notch-h);
+      background: #0a0908;
+      border-radius: 20px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .notch-camera {
+      width: 10px; height: 10px;
+      background: #1a1815;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.06);
+      position: relative;
+    }
+    .notch-camera::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      background: #0d1a2e;
+      border-radius: 50%;
+    }
+    .notch-speaker {
+      width: 44px; height: 5px;
+      background: #1a1815;
+      border-radius: 3px;
+    }
+
+    /* Status bar */
+    .phone-statusbar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      z-index: 9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px 0;
+      pointer-events: none;
+    }
+    .status-time {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(237,232,220,0.9);
+      letter-spacing: 0.02em;
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .status-icons svg {
+      fill: rgba(237,232,220,0.9);
+    }
+
+    /* iframe — arranca debajo de la status bar (52px) */
+    .phone-iframe {
+      position: absolute;
+      top: 52px; left: 0;
+      width: var(--phone-w);
+      height: calc(var(--phone-h) - 52px);
+      border: none;
+      display: block;
+      border-bottom-left-radius:  calc(var(--phone-radius) - var(--phone-border));
+      border-bottom-right-radius: calc(var(--phone-radius) - var(--phone-border));
+    }
+
+    /* Home indicator */
+    .phone-home {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 5px;
+      background: rgba(237,232,220,0.3);
+      border-radius: 3px;
+      z-index: 10;
+    }
+
+    /* ---- REFLECTION OVERLAY ---- */
+    .phone-glare {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.04) 0%,
+        transparent 40%,
+        transparent 70%,
+        rgba(255,255,255,0.02) 100%
+      );
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    /* ---- AMBIENT GLOW ---- */
+    .phone-glow {
+      position: absolute;
+      inset: -60px;
+      background: radial-gradient(ellipse at 50% 50%, rgba(196,30,46,0.08) 0%, transparent 70%);
+      filter: blur(20px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ---- INFO BAR ---- */
+    .info-bar {
+      width: 100%;
+      max-width: 960px;
+      padding: 0 32px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .info-dims {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    .info-dims span { color: var(--accent); }
+    .info-hint {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .info-hint::before {
+      content: '↕';
+      font-size: 13px;
+      opacity: 0.5;
+    }
+
+    /* ---- TABLET MODE ---- */
+    .phone.tablet {
+      --phone-w: 768px;
+      --phone-h: 600px;
+      --phone-radius: 18px;
+      --phone-border: 14px;
+      --notch-w: 0px;
+      --notch-h: 0px;
+    }
+    .phone.tablet .phone-notch { display: none; }
+    .phone.tablet .phone::before { top: 50%; transform: translateY(-50%); }
+
+    /* ---- SE MODE (small) ---- */
+    .phone.se {
+      --phone-w: 320px;
+      --phone-h: 568px;
+      --phone-radius: 40px;
+      --notch-w: 80px;
+      --notch-h: 22px;
+    }
+
+    /* Responsive scale for small screens */
+    @media (max-height: 900px) {
+      .phone { transform: scale(0.85); transform-origin: center top; }
+      .stage { padding-top: 20px; }
+    }
+    @media (max-height: 750px) {
+      .phone { transform: scale(0.72); transform-origin: center top; }
+    }
+    @media (max-width: 480px) {
+      .phone { transform: scale(0.75); transform-origin: center top; }
+      header { padding: 20px 16px 0; }
+      .page-nav { padding: 12px 16px 0; }
+      .info-bar { padding: 0 16px 24px; }
+    }
+
+    /* ---- TOUCH OVERLAY — alineado con el iframe (top: 52px) ---- */
+    #touch-overlay {
+      position: absolute;
+      top: 52px; left: 0; right: 0; bottom: 0;
+      z-index: 8;
+      border-bottom-left-radius:  calc(var(--phone-radius) - var(--phone-border));
+      border-bottom-right-radius: calc(var(--phone-radius) - var(--phone-border));
+      cursor: none;
+    }
+
+    /* ---- TOUCH CURSOR ---- */
+
+    #touch-cursor {
+      position: fixed;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      border: 2px solid rgba(255, 255, 255, 0.55);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s ease, opacity 0.15s ease, width 0.12s ease, height 0.12s ease, background 0.12s ease;
+      display: none;
+      backdrop-filter: blur(2px);
+    }
+    #touch-cursor.pressed {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.35);
+    }
+    #touch-cursor.visible { display: block; }
+
+    /* Ripple al tap */
+    .touch-ripple {
+      position: fixed;
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.4);
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%) scale(1);
+      animation: rippleOut 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes rippleOut {
+      to { transform: translate(-50%, -50%) scale(5); opacity: 0; }
+    }
+
+    /* Label de modo touch */
+    .touch-label {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: rgba(237,232,220,0.35);
+      pointer-events: none;
+      z-index: 9997;
+      white-space: nowrap;
+      transition: opacity 0.3s;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header>
+    <div>
+      <div class="header-brand">BOA <span>FX</span></div>
+      <div class="header-sub">Mobile Preview</div>
+    </div>
+    <div class="device-selector">
+      <button class="device-btn active" onclick="setDevice('default')">iPhone 14</button>
+      <button class="device-btn" onclick="setDevice('se')">SE</button>
+      <button class="device-btn" onclick="setDevice('tablet')">iPad</button>
+    </div>
+  </header>
+
+  <div class="page-nav">
+    <button class="page-btn active" onclick="setPage('index.html')">Home</button>
+    <button class="page-btn" onclick="setPage('catalogo.html')">Tienda</button>
+    <button class="page-btn" onclick="setPage('contacto.html')">Contacto</button>
+  </div>
+
+  <div class="stage">
+    <div class="phone" id="phoneFrame">
+      <div class="phone-glow"></div>
+      <div class="phone-screen">
+        <div class="phone-statusbar">
+          <span class="status-time" id="statusTime">9:41</span>
+          <div class="status-icons">
+            <!-- Signal -->
+            <svg width="16" height="12" viewBox="0 0 16 12">
+              <rect x="0"  y="8"  width="3" height="4" rx="0.5"/>
+              <rect x="4"  y="5"  width="3" height="7" rx="0.5"/>
+              <rect x="8"  y="2"  width="3" height="10" rx="0.5"/>
+              <rect x="12" y="0"  width="3" height="12" rx="0.5"/>
+            </svg>
+            <!-- WiFi -->
+            <svg width="15" height="12" viewBox="0 0 15 12">
+              <path d="M7.5 9.5 a1 1 0 1 1 0 0.01z" fill="rgba(237,232,220,0.9)"/>
+              <path d="M4.2 6.8 Q7.5 4 10.8 6.8" stroke="rgba(237,232,220,0.9)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+              <path d="M1.5 4.2 Q7.5 0 13.5 4.2" stroke="rgba(237,232,220,0.5)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            </svg>
+            <!-- Battery -->
+            <svg width="24" height="12" viewBox="0 0 24 12">
+              <rect x="0.5" y="0.5" width="20" height="11" rx="3" stroke="rgba(237,232,220,0.5)" stroke-width="1" fill="none"/>
+              <rect x="21.5" y="3.5" width="2" height="5" rx="1" fill="rgba(237,232,220,0.4)"/>
+              <rect x="2" y="2" width="16" height="8" rx="2" fill="rgba(237,232,220,0.85)"/>
+            </svg>
+          </div>
+        </div>
+        <div class="phone-notch">
+          <div class="notch-speaker"></div>
+          <div class="notch-camera"></div>
+        </div>
+        <iframe
+          id="previewFrame"
+          class="phone-iframe"
+          src="index.html"
+          title="BOA FX Preview"
+          loading="lazy"
+        ></iframe>
+        <div id="touch-overlay"></div>
+        <div class="phone-home"></div>
+        <div class="phone-glare"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touch cursor -->
+  <div id="touch-cursor"></div>
+  <div class="touch-label" id="touchLabel">✦ TOUCH MODE</div>
+
+  <div class="info-bar">
+    <div class="info-dims" id="infoDims">
+      <span>375</span> × <span>812</span> · iPhone 14
+    </div>
+    <div class="info-hint" id="infoHint">Pasá el cursor por la pantalla</div>
+  </div>
+
+  <script>
+    /* ---- DISPOSITIVOS ---- */
+    const DEVICES = {
+      default: { w: 375, h: 812, label: 'iPhone 14', cls: '' },
+      se:      { w: 320, h: 568, label: 'iPhone SE',  cls: 'se' },
+      tablet:  { w: 768, h: 600, label: 'iPad Mini',  cls: 'tablet' },
+    };
+
+    function setDevice(key) {
+      const d = DEVICES[key];
+      document.getElementById('phoneFrame').className = 'phone' + (d.cls ? ' ' + d.cls : '');
+      document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('infoDims').innerHTML = `<span>${d.w}</span> × <span>${d.h}</span> · ${d.label}`;
+    }
+
+    function setPage(page) {
+      document.getElementById('previewFrame').src = page;
+      document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    /* ---- TOUCH CURSOR ---- */
+    const cursor     = document.getElementById('touch-cursor');
+    const overlay    = document.getElementById('touch-overlay');
+    const iframe     = document.getElementById('previewFrame');
+    const touchLabel = document.getElementById('touchLabel');
+    touchLabel.style.opacity = '0';
+
+    /* Mueve el cursor visual */
+    function showCursor(x, y) {
+      cursor.classList.add('visible');
+      cursor.style.left = x + 'px';
+      cursor.style.top  = y + 'px';
+    }
+
+    /* Crea un ripple en la posición dada */
+    function spawnRipple(x, y) {
+      const r = document.createElement('div');
+      r.className = 'touch-ripple';
+      r.style.left = x + 'px';
+      r.style.top  = y + 'px';
+      document.body.appendChild(r);
+      r.addEventListener('animationend', () => r.remove());
+    }
+
+    /*
+     * toIframeCoords — convierte coordenadas de pantalla a coordenadas del iframe
+     * compensando el CSS transform:scale() del teléfono.
+     * overlay.offsetWidth  = ancho layout real del iframe (375px, sin escalar)
+     * rect.width           = ancho visual (375 × scale)
+     */
+    function toIframeCoords(clientX, clientY) {
+      const rect   = overlay.getBoundingClientRect();
+      const scaleX = overlay.offsetWidth  / rect.width;
+      const scaleY = overlay.offsetHeight / rect.height;
+      return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top)  * scaleY,
+        scaleX, scaleY
+      };
+    }
+
+    /* Despacha un evento de mouse al elemento del iframe en esas coords */
+    function dispatchToIframe(clientX, clientY, type, extra = {}) {
+      try {
+        const { x, y } = toIframeCoords(clientX, clientY);
+        const el = iframe.contentDocument.elementFromPoint(x, y);
+        if (!el) return null;
+        el.dispatchEvent(new MouseEvent(type, {
+          bubbles: true, cancelable: true,
+          view: iframe.contentWindow,
+          clientX: x, clientY: y, ...extra
+        }));
+        return el;
+      } catch (_) { return null; }
+    }
+
+    /* Encuentra el contenedor scrolleable más cercano al punto (x,y) en el iframe */
+    function findScrollable(x, y, axis = 'y') {
+      try {
+        const win = iframe.contentWindow;
+        let el = iframe.contentDocument.elementFromPoint(x, y);
+        while (el && el !== iframe.contentDocument.documentElement) {
+          const st = win.getComputedStyle(el);
+          if (axis === 'y' && (st.overflowY === 'auto' || st.overflowY === 'scroll')
+              && el.scrollHeight > el.clientHeight + 1) return el;
+          if (axis === 'x' && (st.overflowX === 'auto' || st.overflowX === 'scroll')
+              && el.scrollWidth  > el.clientWidth  + 1) return el;
+          el = el.parentElement;
+        }
+        return win; // fallback → página entera
+      } catch (_) { return null; }
+    }
+
+    /* ---- ESTADO DRAG ---- */
+    let isDragging   = false;
+    let dragStartX   = 0, dragStartY   = 0;
+    let dragScrollX  = 0, dragScrollY  = 0;
+    let dragMoved    = false;
+    let dragScrollEl = null;
+    let coordScale   = { scaleX: 1, scaleY: 1 };
+
+    /* ---- INERCIA ---- */
+    let velX = 0, velY = 0;
+    let prevX = 0, prevY = 0, prevT = 0;
+    let inertiaRaf = null;
+
+    function cancelInertia() {
+      if (inertiaRaf) { cancelAnimationFrame(inertiaRaf); inertiaRaf = null; }
+    }
+
+    function applyInertia() {
+      cancelInertia();
+      function step() {
+        velX *= 0.95; velY *= 0.95;           // fricción suave
+        if (Math.abs(velX) < 0.3 && Math.abs(velY) < 0.3) return;
+        try {
+          if (dragScrollEl === iframe.contentWindow || !dragScrollEl) {
+            iframe.contentWindow.scrollBy(velX, velY);
+          } else {
+            dragScrollEl.scrollLeft += velX;
+            dragScrollEl.scrollTop  += velY;
+          }
+        } catch (_) {}
+        inertiaRaf = requestAnimationFrame(step);
+      }
+      inertiaRaf = requestAnimationFrame(step);
+    }
+
+    /* ---- MOUSEMOVE ---- */
+    overlay.addEventListener('mousemove', e => {
+      showCursor(e.clientX, e.clientY);
+
+      if (isDragging) {
+        const dy = (dragStartY - e.clientY) * coordScale.scaleY;
+        const dx = (dragStartX - e.clientX) * coordScale.scaleX;
+
+        if (Math.abs(dy) > 6 || Math.abs(dx) > 6) {
+          dragMoved = true;
+          overlay.style.cursor = 'grabbing';
+        }
+        if (dragMoved) {
+          try {
+            if (dragScrollEl === iframe.contentWindow || !dragScrollEl) {
+              iframe.contentWindow.scrollTo(dragScrollX + dx, dragScrollY + dy);
+            } else {
+              dragScrollEl.scrollLeft = dragScrollX + dx;
+              dragScrollEl.scrollTop  = dragScrollY + dy;
+            }
+          } catch (_) {}
+
+          /* Velocidad para inercia */
+          const now = performance.now();
+          const dt  = now - prevT;
+          if (dt > 0 && dt < 80) {
+            velX = (prevX - e.clientX) / dt * 26 * coordScale.scaleX;
+            velY = (prevY - e.clientY) / dt * 26 * coordScale.scaleY;
+          }
+          prevX = e.clientX; prevY = e.clientY; prevT = now;
+        }
+      } else {
+        dispatchToIframe(e.clientX, e.clientY, 'mousemove');
+        dispatchToIframe(e.clientX, e.clientY, 'mouseover');
+      }
+
+      clearTimeout(overlay._labelTimer);
+      touchLabel.style.opacity = '1';
+      overlay._labelTimer = setTimeout(() => { touchLabel.style.opacity = '0'; }, 1800);
+    });
+
+    /* ---- MOUSELEAVE ---- */
+    overlay.addEventListener('mouseleave', () => {
+      cursor.classList.remove('visible', 'pressed');
+      touchLabel.style.opacity = '0';
+      if (isDragging && dragMoved) applyInertia();
+      isDragging = false;
+      overlay.style.cursor = 'none';
+    });
+
+    /* ---- MOUSEDOWN ---- */
+    overlay.addEventListener('mousedown', e => {
+      e.preventDefault();
+      cancelInertia();
+      cursor.classList.add('pressed');
+      isDragging  = true;
+      dragMoved   = false;
+      dragStartX  = e.clientX;
+      dragStartY  = e.clientY;
+      prevX = e.clientX; prevY = e.clientY; prevT = performance.now();
+      velX = 0; velY = 0;
+
+      const coords = toIframeCoords(e.clientX, e.clientY);
+      coordScale = { scaleX: coords.scaleX, scaleY: coords.scaleY };
+
+      try {
+        const scY = findScrollable(coords.x, coords.y, 'y');
+        const scX = findScrollable(coords.x, coords.y, 'x');
+        dragScrollEl = (scY !== iframe.contentWindow) ? scY : (scX || iframe.contentWindow);
+        if (dragScrollEl === iframe.contentWindow) {
+          dragScrollY = iframe.contentWindow.scrollY;
+          dragScrollX = iframe.contentWindow.scrollX;
+        } else {
+          dragScrollY = dragScrollEl.scrollTop;
+          dragScrollX = dragScrollEl.scrollLeft;
+        }
+      } catch (_) { dragScrollEl = iframe.contentWindow; dragScrollY = 0; dragScrollX = 0; }
+
+      spawnRipple(e.clientX, e.clientY);
+    });
+
+    /* ---- MOUSEUP: tap = click, drag = inercia ---- */
+    overlay.addEventListener('mouseup', e => {
+      cursor.classList.remove('pressed');
+      overlay.style.cursor = 'none';
+      const wasDrag = dragMoved;
+      isDragging = false;
+      dragMoved  = false;
+
+      if (wasDrag) {
+        applyInertia(); // lanzar inercia al soltar
+      } else {
+        /* Tap real → click en el elemento correcto */
+        try {
+          const { x, y } = toIframeCoords(e.clientX, e.clientY);
+          const el = iframe.contentDocument.elementFromPoint(x, y);
+          if (el) {
+            const target = el.closest('a, button, input, select, label, [onclick]') || el;
+            target.click();
+          }
+        } catch (_) {}
+      }
+    });
+
+    /* ---- WHEEL: ruedita del mouse (además del drag) ---- */
+    overlay.addEventListener('wheel', e => {
+      e.preventDefault();
+      cancelInertia();
+      try {
+        const { x, y } = toIframeCoords(e.clientX, e.clientY);
+        const axis = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? 'y' : 'x';
+        const sc   = findScrollable(x, y, axis);
+        if (sc === iframe.contentWindow || !sc) {
+          iframe.contentWindow.scrollBy(e.deltaX, e.deltaY);
+        } else {
+          sc.scrollLeft += e.deltaX;
+          sc.scrollTop  += e.deltaY;
+        }
+      } catch (_) {}
+    }, { passive: false });
+
+    /* ---- RELOJ EN VIVO ---- */
+    function updateClock() {
+      const now = new Date();
+      const h = now.getHours();
+      const m = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('statusTime').textContent = `${h}:${m}`;
+    }
+    updateClock();
+    setInterval(updateClock, 10000);
+  </script>
+</body>
+</html>

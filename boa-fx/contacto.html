@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto — BOA FX</title>
+  <meta name="description" content="Conoce la historia de BOA FX. Una marca mexicana creada por artistas para artistas. Contáctanos por WhatsApp." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void:     #0C0B0A;
+      --smoke:    #1D1B18;
+      --ash:      #2E2B27;
+      --carbon:   #3D3A34;
+      --tungsten: #C41E2E;
+      --latex:    #C4A882;
+      --ivory:    #EDE8DC;
+      --bone:     #B8B0A4;
+      --ghost:    #6B6560;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'Outfit', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --max-w: 1440px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--void); color: var(--ivory); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+    /* GRAIN */
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      pointer-events: none; z-index: 9999; opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 80px); }
+
+    /* ============ NAV ============ */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 14px clamp(20px, 4vw, 80px);
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(12,11,10,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-logo { display: flex; align-items: center; }
+    .nav-logo img { height: 64px; width: auto; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
+    .nav-links a { font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--bone); transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--ivory); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown > a::after { content: ' ▾'; font-size: 9px; opacity: 0.6; }
+    .nav-dropdown-menu { position: absolute; top: calc(100% + 18px); left: 50%; transform: translateX(-50%) translateY(-6px); background: rgba(12,11,10,0.97); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); min-width: 180px; padding: 8px 0; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 200; }
+    .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
+    .nav-dropdown-menu a { display: block; padding: 10px 20px; font-size: 12px; color: var(--bone); letter-spacing: 0.08em; transition: color 0.15s; }
+    .nav-dropdown-menu a:hover { color: var(--tungsten); }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-wa { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #25D366; }
+    .nav-wa svg { width: 16px; height: 16px; fill: #25D366; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .nav-hamburger span { display: block; width: 24px; height: 1.5px; background: var(--ivory); }
+    .nav-mobile { display: none; position: fixed; inset: 0; background: rgba(12,11,10,0.98); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a { font-family: var(--font-display); font-size: 38px; color: var(--ivory); transition: color 0.2s; }
+    .nav-mobile a:hover { color: var(--tungsten); }
+    .nav-mobile-close { position: absolute; top: 24px; right: clamp(20px,4vw,80px); font-size: 28px; color: var(--bone); cursor: pointer; }
+
+    /* ============ REVEAL ANIM ============ */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    .divider { width: 40px; height: 1px; background: var(--tungsten); margin: 20px 0; }
+    .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tungsten); }
+
+    /* ============ HERO ============ */
+    .page-hero {
+      padding-top: calc(72px + clamp(60px, 8vw, 100px));
+      padding-bottom: clamp(48px, 6vw, 80px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, rgba(196,30,46,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .page-hero-label { margin-bottom: 14px; display: block; }
+    .page-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(64px, 10vw, 130px);
+      line-height: 0.92;
+      color: var(--ivory);
+    }
+    .page-hero-title span { color: var(--tungsten); }
+    .page-hero-sub {
+      max-width: 480px;
+      margin-top: 22px;
+      color: var(--bone);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ============ QUIÉN SOY ============ */
+    #quien-soy {
+      padding: clamp(60px, 8vw, 120px) 0;
+      background: var(--void);
+    }
+    .quien-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: clamp(40px, 6vw, 100px);
+      align-items: start;
+    }
+    .quien-left {}
+    .quien-photo {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: radial-gradient(ellipse at 30% 40%, #2b1a0a 0%, #0f0d0a 70%);
+      position: relative;
+      overflow: hidden;
+    }
+    .quien-photo::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 25% 55%, rgba(196,30,46,0.12) 0%, transparent 55%);
+    }
+    .quien-photo-label {
+      position: absolute;
+      bottom: 16px; left: 16px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(237,232,220,0.4);
+      letter-spacing: 0.12em;
+    }
+    /* Placeholder icon centrado */
+    .quien-photo-ph {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 64px; opacity: 0.12;
+    }
+    .quien-right {}
+    .quien-heading {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4vw, 56px);
+      line-height: 0.95;
+      color: var(--ivory);
+      margin: 14px 0 28px;
+    }
+    .quien-heading em { color: var(--tungsten); font-style: normal; display: block; }
+    .quien-body {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .quien-body p {
+      font-size: clamp(15px, 1.3vw, 17px);
+      color: var(--bone);
+      line-height: 1.75;
+    }
+    .quien-body p strong { color: var(--ivory); font-weight: 600; }
+    .quien-body p em { color: var(--latex); font-style: normal; }
+    .quien-signature {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .quien-signature-name {
+      font-family: var(--font-display);
+      font-size: 28px;
+      color: var(--ivory);
+      letter-spacing: 0.04em;
+    }
+    .quien-signature-role {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ghost);
+      letter-spacing: 0.12em;
+      margin-top: 4px;
+    }
+
+    /* ============ CONTACTO CARDS ============ */
+    #contacto-cards {
+      padding: clamp(60px, 8vw, 100px) 0;
+      background: var(--smoke);
+    }
+    .contacto-header { margin-bottom: clamp(40px, 5vw, 60px); }
+    .contacto-header h2 { font-family: var(--font-display); font-size: clamp(40px, 5vw, 64px); line-height: 0.95; margin-top: 12px; }
+    .contacto-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .contact-card {
+      background: var(--ash);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: border-color 0.25s, transform 0.25s var(--ease-out);
+    }
+    .contact-card:hover { border-color: rgba(255,255,255,0.14); transform: translateY(-4px); }
+    .contact-card-icon { font-size: 32px; }
+    .contact-card-platform {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: var(--ghost);
+    }
+    .contact-card-name {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: var(--ivory);
+      line-height: 1;
+    }
+    .contact-card-handle {
+      font-size: 14px;
+      color: var(--bone);
+      line-height: 1.4;
+    }
+    .contact-card-handle strong { color: var(--ivory); }
+    .contact-card-btn {
+      margin-top: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 20px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--bone);
+    }
+    .contact-card-btn:hover { color: var(--ivory); border-color: rgba(255,255,255,0.25); }
+    .contact-card-btn svg { width: 14px; height: 14px; }
+    /* WhatsApp card especial */
+    .contact-card.wa-card-contact {
+      background: rgba(37,211,102,0.05);
+      border-color: rgba(37,211,102,0.15);
+      grid-column: 1 / 2;
+    }
+    .contact-card.wa-card-contact .contact-card-name { color: #25D366; }
+    .contact-card.wa-card-contact .contact-card-btn {
+      background: #25D366; color: #fff; border-color: #25D366;
+    }
+    .contact-card.wa-card-contact .contact-card-btn:hover { background: #20b958; }
+    .contact-card.wa-card-contact .contact-card-btn svg { fill: #fff; }
+
+    /* ============ FAQ ============ */
+    #faq {
+      padding: clamp(60px, 8vw, 100px) 0;
+      background: var(--void);
+    }
+    .faq-header { margin-bottom: clamp(40px, 5vw, 60px); }
+    .faq-header h2 { font-family: var(--font-display); font-size: clamp(40px, 5vw, 64px); line-height: 0.95; margin-top: 12px; }
+    .faq-list { display: flex; flex-direction: column; max-width: 800px; }
+    .faq-item {
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 22px 0;
+      text-align: left;
+      cursor: pointer;
+      font-size: clamp(15px, 1.3vw, 17px);
+      font-weight: 600;
+      color: var(--ivory);
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+      transition: color 0.2s;
+    }
+    .faq-question:hover { color: var(--tungsten); }
+    .faq-icon {
+      font-size: 20px;
+      color: var(--tungsten);
+      flex-shrink: 0;
+      transition: transform 0.3s var(--ease-out);
+      font-style: normal;
+      line-height: 1;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s var(--ease-out), padding 0.3s;
+    }
+    .faq-item.open .faq-answer { max-height: 400px; }
+    .faq-answer-inner {
+      padding: 0 0 22px;
+      color: var(--bone);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+    .faq-answer-inner strong { color: var(--ivory); }
+    .faq-answer-inner a { color: var(--tungsten); }
+
+    /* ============ CTA FINAL ============ */
+    #cta-final {
+      padding: clamp(60px, 8vw, 100px) 0;
+      background: var(--smoke);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #cta-final::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 100%, rgba(196,30,46,0.08) 0%, transparent 60%);
+    }
+    .cta-final-label { margin-bottom: 16px; display: block; }
+    .cta-final-title {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 6vw, 80px);
+      line-height: 0.95;
+      color: var(--ivory);
+      margin-bottom: 20px;
+    }
+    .cta-final-title span { color: var(--tungsten); }
+    .cta-final-sub {
+      color: var(--bone);
+      font-size: 16px;
+      max-width: 460px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+    .cta-final-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: #25D366;
+      color: #fff;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      position: relative; z-index: 1;
+    }
+    .cta-final-btn:hover { background: #20b958; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(37,211,102,0.3); }
+    .cta-final-btn svg { width: 18px; height: 18px; fill: #fff; }
+    .cta-final-note {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ghost);
+      letter-spacing: 0.1em;
+      margin-top: 16px;
+      position: relative; z-index: 1;
+    }
+
+    /* ============ FOOTER ============ */
+    footer { background: var(--void); border-top: 1px solid rgba(255,255,255,0.06); padding: 32px 0; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-copy { font-family: var(--font-mono); font-size: 11px; color: var(--ghost); }
+    .footer-social { display: flex; gap: 20px; }
+    .footer-social a { font-family: var(--font-mono); font-size: 11px; color: var(--ghost); letter-spacing: 0.1em; transition: color 0.2s; }
+    .footer-social a:hover { color: var(--tungsten); }
+
+    /* WA Float */
+    .wa-float { position: fixed; bottom: 28px; right: 28px; z-index: 900; display: flex; align-items: center; gap: 10px; background: #25D366; color: #fff; padding: 14px 20px; border-radius: 50px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 32px rgba(37,211,102,0.35); transition: all 0.3s; }
+    .wa-float:hover { transform: translateY(-3px); }
+    .wa-float svg { width: 20px; height: 20px; fill: #fff; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 900px) {
+      .quien-grid { grid-template-columns: 1fr; }
+      .quien-photo { aspect-ratio: 4 / 3; max-width: 480px; }
+      .contacto-grid { grid-template-columns: 1fr; }
+      .contact-card.wa-card-contact { grid-column: auto; }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-wa { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-logo img { height: 44px; }
+      .page-hero-sub { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ====== NAV ====== -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="BOA FX"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span style="display:none;font-family:var(--font-display);font-size:26px;letter-spacing:0.06em;color:var(--ivory);">BOA <b style="color:var(--tungsten)">FX</b></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown">
+      <a href="catalogo.html">Tienda en línea</a>
+      <div class="nav-dropdown-menu">
+        <a href="catalogo.html?cat=Prostéticos">Prostéticos</a>
+        <a href="catalogo.html?cat=Materiales">Materiales FX</a>
+        <a href="catalogo.html?cat=Complementos">Complementos</a>
+      </div>
+    </li>
+    <li><a href="contacto.html" class="active">Contacto</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-wa" href="https://wa.me/525564821935" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Escríbenos
+    </a>
+    <div class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<div class="nav-mobile" id="mobileMenu">
+  <span class="nav-mobile-close" id="mobileClose">✕</span>
+  <a href="index.html">Home</a>
+  <a href="catalogo.html">Tienda en línea</a>
+  <a href="contacto.html">Contacto</a>
+  <a href="https://wa.me/525564821935" style="color:#25D366;" target="_blank">WhatsApp ↗</a>
+</div>
+
+<!-- ====== HERO ====== -->
+<section class="page-hero">
+  <div class="container">
+    <span class="label page-hero-label reveal">✦ BOA FX — Makeup and Visual Effects</span>
+    <h1 class="page-hero-title reveal reveal-delay-1">
+      QUIÉNES<br><span>SOMOS.</span>
+    </h1>
+    <p class="page-hero-sub reveal reveal-delay-2">
+      Detrás de BOA FX hay personas reales, con manos llenas de látex y un oficio que empezó mucho antes de que esto tuviera nombre.
+    </p>
+  </div>
+</section>
+
+<!-- ====== FORMAS DE CONTACTO ====== -->
+<section id="contacto-cards">
+  <div class="container">
+    <div class="contacto-header reveal">
+      <span class="label">✦ Encuéntranos</span>
+      <h2>FORMAS DE<br>CONTACTO.</h2>
+    </div>
+    <div class="contacto-grid">
+
+      <!-- WhatsApp -->
+      <div class="contact-card wa-card-contact reveal">
+        <div class="contact-card-icon">💬</div>
+        <div class="contact-card-platform">PRINCIPAL · PEDIDOS Y COTIZACIONES</div>
+        <div class="contact-card-name">WHATSAPP</div>
+        <div class="contact-card-handle">
+          La forma más rápida de contactarnos.<br>
+          <strong>Pedidos, cotizaciones, dudas y asesoría.</strong><br>
+          Respondemos los 365 días del año.
+        </div>
+        <a class="contact-card-btn" href="https://wa.me/525564821935?text=Hola%20BOA%20FX%2C%20quisiera%20más%20información." target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Escribir ahora
+        </a>
+      </div>
+
+      <!-- Instagram -->
+      <div class="contact-card reveal reveal-delay-1">
+        <div class="contact-card-icon">📸</div>
+        <div class="contact-card-platform">INSTAGRAM</div>
+        <div class="contact-card-name">@BOA.FX</div>
+        <div class="contact-card-handle">
+          Transformaciones, proceso, productos y comunidad.<br>
+          <strong>Síguenos para no perderte nada.</strong>
+        </div>
+        <a class="contact-card-btn" href="https://instagram.com/boa.fx" target="_blank">
+          Ver perfil →
+        </a>
+      </div>
+
+      <!-- Facebook -->
+      <div class="contact-card reveal reveal-delay-2">
+        <div class="contact-card-icon">📘</div>
+        <div class="contact-card-platform">FACEBOOK</div>
+        <div class="contact-card-name">BOA FX</div>
+        <div class="contact-card-handle">
+          Novedades, lanzamientos y contenido de la comunidad BOA FX.
+        </div>
+        <a class="contact-card-btn" href="https://facebook.com/BoaFX" target="_blank">
+          Ver página →
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====== QUIÉN SOY ====== -->
+<section id="quien-soy">
+  <div class="container">
+    <div class="quien-grid">
+
+      <div class="reveal">
+        <div class="quien-photo">
+          <div class="quien-photo-ph">🎭</div>
+          <span class="quien-photo-label">[ Tu foto aquí ]</span>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-1">
+        <span class="label">✦ Quiénes Somos</span>
+        <h2 class="quien-heading">
+          NO ES SOLO<br>UNA EMPRESA.<br>
+          <em>ES UN SUEÑO.</em>
+        </h2>
+        <div class="quien-body">
+          <p>
+            BOA FX nació de una frustración real: <strong>encontrar materiales profesionales de calidad en México, accesibles para artistas independientes, era casi imposible.</strong> Las opciones eran escasas, los precios absurdos o el material llegaba de fuera sin garantía de nada.
+          </p>
+          <p>
+            Soy maquillista y artista FX, y pasé años aprendiendo el oficio de la forma más difícil — a prueba y error, con materiales que no siempre funcionaban y sin mucha gente dispuesta a compartir el conocimiento. <em>Eso tenía que cambiar.</em>
+          </p>
+          <p>
+            BOA FX empezó en una mesa de trabajo en CDMX. Sin corporativos, sin intermediarios, sin pretensiones. Solo el deseo genuino de fabricar cosas buenas y ponerlas al alcance de quienes realmente las necesitan: cosplayers, maquillistas, creadores, estudiantes, producciones independientes y todos los que aman este oficio tanto como yo.
+          </p>
+          <p>
+            <strong>Queremos crecer contigo.</strong> Cada personaje que creas con nuestros materiales es parte de esta historia. Cada compra le da fuerza a una marca mexicana que cree que el arte no debería tener fronteras de presupuesto.
+          </p>
+        </div>
+        <div class="quien-signature">
+          <div class="quien-signature-name">BOA FX</div>
+          <div class="quien-signature-role">✦ Makeup and Visual Effects · Fabricado en México · CDMX</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====== FAQ ====== -->
+<section id="faq">
+  <div class="container">
+    <div class="faq-header reveal">
+      <span class="label">✦ Preguntas frecuentes</span>
+      <h2>LO QUE MÁS<br>NOS PREGUNTAN.</h2>
+    </div>
+    <div class="faq-list reveal reveal-delay-1">
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Hacen envíos a toda la República?
+          <i class="faq-icon">+</i>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sí, enviamos a <strong>toda la República Mexicana.</strong> También realizamos entregas personales en <strong>CDMX.</strong> El costo y tiempo de envío se confirman al momento de hacer tu pedido por WhatsApp.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Cómo hago mi pedido?
+          <i class="faq-icon">+</i>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Tienes dos opciones: usar el <strong>carrito de la tienda en línea</strong> y enviarnos el resumen por WhatsApp, o escribirnos directamente al <strong>WhatsApp</strong> con los productos que necesitas. En ambos casos confirmamos disponibilidad, precio final y forma de pago contigo.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Cuáles son los métodos de pago?
+          <i class="faq-icon">+</i>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Los métodos de pago se confirman por WhatsApp una vez que tenemos tu pedido listo. Manejamos <strong>transferencia bancaria, depósito y efectivo</strong> en entregas personales en CDMX.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Hacen prostéticos personalizados?
+          <i class="faq-icon">+</i>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sí. Fabricamos <strong>prostéticos a la medida</strong> para proyectos de cosplay, cine, teatro y fotografía. También ofrecemos servicio de maquillaje y caracterización completa. <a href="https://wa.me/525564821935?text=Hola%20BOA%20FX%2C%20me%20interesa%20un%20prostético%20personalizado." target="_blank">Escríbenos para cotizar →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Cuánto tarda en llegar mi pedido?
+          <i class="faq-icon">+</i>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Los tiempos dependen de la disponibilidad del producto y tu ubicación. Productos en stock generalmente salen en <strong>1 a 3 días hábiles.</strong> Prostéticos personalizados tienen tiempos variables según la complejidad. Todo se coordina por WhatsApp.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Los productos son aptos para piel sensible?
+          <i class="faq-icon">+</i>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Nuestros productos están formulados para uso en maquillaje artístico y efectos especiales, <strong>no son productos cosméticos convencionales.</strong> Si tienes historial de alergias a látex, silicona o adhesivos para piel, te recomendamos hacer una prueba de parche antes de la aplicación completa, o consultar con tu médico. El uso es responsabilidad del comprador.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Ofrecen asesoría sobre el uso de los materiales?
+          <i class="faq-icon">+</i>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Sí. Si no sabes qué producto necesitas o cómo usarlo, <strong>escríbenos y con gusto te orientamos.</strong> Somos artistas FX y conocemos el oficio desde adentro. Próximamente también tendremos cursos presenciales y en línea.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====== CTA FINAL ====== -->
+<section id="cta-final">
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="cta-final-label label reveal">✦ Estamos aquí</span>
+    <h2 class="cta-final-title reveal reveal-delay-1">
+      ¿TIENES UNA<br><span>PREGUNTA?</span>
+    </h2>
+    <p class="cta-final-sub reveal reveal-delay-2">
+      No hay pregunta pequeña. Si tienes dudas sobre materiales, técnicas, pedidos o proyectos personalizados, escríbenos — respondemos de verdad.
+    </p>
+    <a class="cta-final-btn reveal reveal-delay-3" href="https://wa.me/525564821935?text=Hola%20BOA%20FX%2C%20tengo%20una%20pregunta." target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Escribir por WhatsApp
+    </a>
+    <p class="cta-final-note reveal">✦ Respuesta en menos de 24 hrs · Los 365 días del año</p>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="container">
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2024 BOA FX · Fabricado en México · Todos los derechos reservados</div>
+      <div class="footer-social">
+        <a href="https://instagram.com/boa.fx" target="_blank">Instagram</a>
+        <a href="https://facebook.com/BoaFX" target="_blank">Facebook</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- WA Float -->
+<a class="wa-float" href="https://wa.me/525564821935?text=Hola%20BOA%20FX%2C%20quisiera%20más%20información." target="_blank">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  /* NAV */
+  document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileMenu').classList.add('open'));
+  document.getElementById('mobileClose').addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+
+  /* REVEAL */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* FAQ ACCORDION */
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const item = this.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      // Cierra todos
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      // Abre el clickeado si estaba cerrado
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>
