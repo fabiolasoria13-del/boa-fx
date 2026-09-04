@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BOA FX — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void:     #0C0B0A;
+      --smoke:    #1D1B18;
+      --ash:      #2E2B27;
+      --carbon:   #3D3A34;
+      --tungsten: #C41E2E;
+      --latex:    #C4A882;
+      --ivory:    #EDE8DC;
+      --bone:     #B8B0A4;
+      --ghost:    #6B6560;
+
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'Outfit', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      background: var(--void);
+      color: var(--ivory);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- LAYOUT ---- */
+    .admin-container {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+
+    .admin-nav {
+      background: var(--smoke);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 24px 20px;
+      position: fixed;
+      height: 100vh;
+      width: 240px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .admin-nav-logo {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.06em;
+      margin-bottom: 32px;
+      color: var(--ivory);
+    }
+
+    .admin-nav-logo b { color: var(--tungsten); }
+
+    .admin-nav-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .admin-nav-item {
+      display: block;
+    }
+
+    .admin-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--bone);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      border-radius: 2px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .admin-nav-link:hover,
+    .admin-nav-link.active {
+      background: rgba(255,255,255,0.08);
+      color: var(--ivory);
+    }
+
+    .admin-nav-link.active {
+      border-left: 3px solid var(--tungsten);
+      padding-left: 13px;
+    }
+
+    .admin-nav-link span { font-size: 18px; }
+
+    .admin-nav-logout {
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .admin-nav-logout .admin-nav-link {
+      color: #ff6b5b;
+    }
+
+    .admin-nav-logout .admin-nav-link:hover {
+      background: rgba(255, 107, 91, 0.1);
+    }
+
+    /* ---- MAIN CONTENT ---- */
+    .admin-main {
+      margin-left: 240px;
+      padding: 40px;
+      overflow-y: auto;
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .admin-title {
+      font-family: var(--font-display);
+      font-size: 36px;
+      letter-spacing: 0.04em;
+      color: var(--ivory);
+    }
+
+    .admin-user-info {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--ghost);
+    }
+
+    /* ---- SECTIONS (hidden by default) ---- */
+    .admin-section {
+      display: none;
+    }
+
+    .admin-section.active {
+      display: block;
+    }
+
+    /* ---- CARDS / FORMS ---- */
+    .admin-card {
+      background: var(--smoke);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 28px;
+      margin-bottom: 24px;
+      border-radius: 2px;
+    }
+
+    .admin-card-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: var(--ivory);
+      margin-bottom: 20px;
+    }
+
+    .admin-form-group {
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .admin-label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--tungsten);
+    }
+
+    .admin-input,
+    .admin-textarea,
+    .admin-select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--ivory);
+      font-family: var(--font-body);
+      font-size: 14px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .admin-input:focus,
+    .admin-textarea:focus,
+    .admin-select:focus {
+      border-color: var(--tungsten);
+    }
+
+    .admin-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .admin-btn {
+      background: var(--tungsten);
+      color: var(--void);
+      border: none;
+      padding: 12px 24px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 2px;
+    }
+
+    .admin-btn:hover {
+      background: #e0253a;
+      transform: translateY(-1px);
+    }
+
+    .admin-btn:disabled {
+      background: var(--ash);
+      color: var(--ghost);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .admin-btn-secondary {
+      background: transparent;
+      color: var(--bone);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .admin-btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--ivory);
+    }
+
+    /* ---- LISTS ---- */
+    .admin-list {
+      list-style: none;
+    }
+
+    .admin-list-item {
+      background: var(--ash);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 2px;
+    }
+
+    .admin-list-item-title {
+      font-weight: 600;
+      color: var(--ivory);
+      flex: 1;
+    }
+
+    .admin-list-item-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ghost);
+      margin-right: 16px;
+    }
+
+    .admin-list-item-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .admin-btn-sm {
+      padding: 8px 12px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+    }
+
+    .admin-btn-danger {
+      background: #8B0000;
+      color: var(--ivory);
+    }
+
+    .admin-btn-danger:hover {
+      background: #a00;
+    }
+
+    /* ---- ALERTS ---- */
+    .admin-alert {
+      background: rgba(196, 30, 46, 0.15);
+      border: 1px solid rgba(196, 30, 46, 0.3);
+      color: #ff6b5b;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      border-radius: 2px;
+      display: none;
+    }
+
+    .admin-alert.show {
+      display: block;
+    }
+
+    .admin-success {
+      background: rgba(37, 211, 102, 0.15);
+      border-color: rgba(37, 211, 102, 0.3);
+      color: #5cdb7c;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      .admin-container {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-nav {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        padding: 16px;
+      }
+
+      .admin-main {
+        margin-left: 0;
+        padding: 24px 16px;
+      }
+
+      .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .admin-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ---- NAV ---- -->
+<nav class="admin-nav">
+  <div class="admin-nav-logo">BOA <b>FX</b></div>
+  <ul class="admin-nav-menu">
+    <li class="admin-nav-item">
+      <a class="admin-nav-link active" onclick="switchSection('dashboard')">
+        <span>📊</span> Dashboard
+      </a>
+    </li>
+    <li class="admin-nav-item">
+      <a class="admin-nav-link" onclick="switchSection('cursos')">
+        <span>📚</span> Cursos
+      </a>
+    </li>
+    <li class="admin-nav-item">
+      <a class="admin-nav-link" onclick="switchSection('productos')">
+        <span>📦</span> Productos
+      </a>
+    </li>
+    <li class="admin-nav-item">
+      <a class="admin-nav-link" onclick="switchSection('preguntas')">
+        <span>❓</span> Preguntas
+      </a>
+    </li>
+  </ul>
+  <div class="admin-nav-logout">
+    <a class="admin-nav-link" onclick="logout()">
+      <span>🚪</span> Salir
+    </a>
+  </div>
+</nav>
+
+<!-- ---- MAIN ---- -->
+<main class="admin-main">
+
+  <!-- HEADER -->
+  <div class="admin-header">
+    <h1 class="admin-title">Panel BOA FX</h1>
+    <div class="admin-user-info">
+      Usuario: <span id="adminUserName"></span><br>
+      Conectado ✓
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section class="admin-section active" id="dashboard">
+    <div class="admin-card">
+      <div class="admin-card-title">Bienvenida al Panel de Administración</div>
+      <p style="color: var(--bone); line-height: 1.7; margin-bottom: 20px;">
+        Desde aquí puedes gestionar cursos, productos, y responder preguntas de los estudiantes. 
+        Selecciona una sección en el menú para comenzar.
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px;">
+        <div style="background: var(--ash); padding: 16px; border: 1px solid rgba(255,255,255,0.05);">
+          <div style="font-family: var(--font-display); font-size: 28px; color: var(--tungsten);" id="statsC">0</div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--ghost); margin-top: 6px; letter-spacing: 0.1em;">CURSOS</div>
+        </div>
+        <div style="background: var(--ash); padding: 16px; border: 1px solid rgba(255,255,255,0.05);">
+          <div style="font-family: var(--font-display); font-size: 28px; color: var(--latex);" id="statsV">0</div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--ghost); margin-top: 6px; letter-spacing: 0.1em;">VIDEOS SUBIDOS</div>
+        </div>
+        <div style="background: var(--ash); padding: 16px; border: 1px solid rgba(255,255,255,0.05);">
+          <div style="font-family: var(--font-display); font-size: 28px; color: #25D366;" id="statsQ">0</div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--ghost); margin-top: 6px; letter-spacing: 0.1em;">PREGUNTAS</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CURSOS -->
+  <section class="admin-section" id="cursos">
+    <div class="admin-alert" id="cursosAlert"></div>
+
+    <!-- Crear curso -->
+    <div class="admin-card">
+      <div class="admin-card-title">Crear Nuevo Curso</div>
+      <form id="cursoForm" style="display: grid; gap: 16px;">
+        <div class="admin-form-group">
+          <label class="admin-label">Nombre del Curso</label>
+          <input type="text" class="admin-input" id="cursoNombre" placeholder="Ej: Creación de Calvas" required>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-label">Descripción</label>
+          <textarea class="admin-textarea" id="cursoDesc" placeholder="Describe el contenido del curso..." required></textarea>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-label">Precio (MXN)</label>
+          <input type="number" class="admin-input" id="cursoPrecio" placeholder="Ej: 1000" min="1" required>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-label">Categoría</label>
+          <select class="admin-select" id="cursoCat" required>
+            <option value="">-- Selecciona --</option>
+            <option value="Básico">Básico</option>
+            <option value="Intermedio">Intermedio</option>
+            <option value="Avanzado">Avanzado</option>
+          </select>
+        </div>
+        <button type="submit" class="admin-btn">Crear Curso</button>
+      </form>
+    </div>
+
+    <!-- Lista de cursos -->
+    <div class="admin-card">
+      <div class="admin-card-title">Cursos Activos</div>
+      <ul class="admin-list" id="cursosList">
+        <li class="admin-list-item" style="color: var(--ghost);">
+          Sin cursos aún. Crea uno para comenzar.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS -->
+  <section class="admin-section" id="productos">
+    <div class="admin-alert" id="productosAlert"></div>
+
+    <div class="admin-card">
+      <div class="admin-card-title">Gestionar Productos</div>
+      <p style="color: var(--bone); margin-bottom: 20px;">
+        Los productos se editan directamente en el archivo HTML.<br>
+        <a href="/" style="color: var(--latex); text-decoration: underline;">Ir al sitio</a> para actualizar el catálogo.
+      </p>
+      <button class="admin-btn" onclick="window.open('/', '_blank')">Abrir Sitio</button>
+    </div>
+  </section>
+
+  <!-- PREGUNTAS -->
+  <section class="admin-section" id="preguntas">
+    <div class="admin-alert" id="preguntasAlert"></div>
+
+    <div class="admin-card">
+      <div class="admin-card-title">Preguntas de Estudiantes</div>
+      <ul class="admin-list" id="preguntasList">
+        <li class="admin-list-item" style="color: var(--ghost);">
+          No hay preguntas aún.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<script src="admin.js"></script>
+
+</body>
+</html>

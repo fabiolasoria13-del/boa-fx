@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BOA FX — Admin Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void:     #0C0B0A;
+      --smoke:    #1D1B18;
+      --ash:      #2E2B27;
+      --tungsten: #C41E2E;
+      --latex:    #C4A882;
+      --ivory:    #EDE8DC;
+      --bone:     #B8B0A4;
+      --ghost:    #6B6560;
+
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'Outfit', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--void);
+      color: var(--ivory);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      padding: 40px;
+      background: var(--smoke);
+      border: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-header {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .login-logo {
+      font-family: var(--font-display);
+      font-size: 32px;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+      color: var(--ivory);
+    }
+
+    .login-logo b { color: var(--tungsten); }
+
+    .login-subtitle {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--bone);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--tungsten);
+    }
+
+    .form-input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--ivory);
+      font-family: var(--font-body);
+      font-size: 15px;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .form-input::placeholder {
+      color: var(--ghost);
+    }
+
+    .form-input:focus {
+      border-color: var(--tungsten);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .login-btn {
+      background: var(--tungsten);
+      color: var(--void);
+      border: none;
+      padding: 14px 24px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 14px;
+    }
+
+    .login-btn:hover {
+      background: #e0253a;
+      transform: translateY(-2px);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn:disabled {
+      background: var(--ash);
+      color: var(--ghost);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-error {
+      background: rgba(196, 30, 46, 0.15);
+      border: 1px solid rgba(196, 30, 46, 0.3);
+      color: #ff6b5b;
+      padding: 12px 14px;
+      font-size: 13px;
+      display: none;
+      margin-bottom: 14px;
+    }
+
+    .login-error.show {
+      display: block;
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 28px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 12px;
+      color: var(--ghost);
+    }
+
+    .login-footer a {
+      color: var(--latex);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .login-footer a:hover {
+      color: var(--ivory);
+    }
+
+    /* Loading state */
+    .login-btn.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .login-btn.loading::after {
+      content: ' ⏳';
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <div class="login-header">
+    <div class="login-logo">BOA <b>FX</b></div>
+    <div class="login-subtitle">Panel de Administración</div>
+  </div>
+
+  <div class="login-error" id="loginError"></div>
+
+  <form class="login-form" id="loginForm">
+    <div class="form-group">
+      <label class="form-label">Usuario</label>
+      <input
+        type="text"
+        class="form-input"
+        id="username"
+        placeholder="Ingresa tu usuario"
+        autocomplete="username"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input
+        type="password"
+        class="form-input"
+        id="password"
+        placeholder="Ingresa tu contraseña"
+        autocomplete="current-password"
+        required
+      />
+    </div>
+
+    <button type="submit" class="login-btn" id="loginBtn">Ingresar</button>
+  </form>
+
+  <div class="login-footer">
+    ✦ BOA FX Admin · 2026<br>
+    <a href="/">Volver al sitio</a>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('loginForm');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('loginBtn');
+  const errorDiv = document.getElementById('loginError');
+
+  // Credenciales (en producción, esto sería en backend)
+  const ADMIN_USER = 'adminboa';
+  const ADMIN_PASS = 'Limited2000!';
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    errorDiv.classList.remove('show');
+
+    const user = usernameInput.value.trim();
+    const pass = passwordInput.value;
+
+    if (!user || !pass) {
+      showError('Por favor completa todos los campos');
+      return;
+    }
+
+    // Simular pequeño delay para UX
+    loginBtn.classList.add('loading');
+    loginBtn.disabled = true;
+
+    setTimeout(() => {
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        // Éxito
+        localStorage.setItem('boafx_admin_token', 'authenticated_' + Date.now());
+        localStorage.setItem('boafx_admin_user', user);
+        window.location.href = 'admin.html';
+      } else {
+        showError('Usuario o contraseña incorrectos');
+        loginBtn.classList.remove('loading');
+        loginBtn.disabled = false;
+        passwordInput.value = '';
+        passwordInput.focus();
+      }
+    }, 600);
+  });
+
+  function showError(msg) {
+    errorDiv.textContent = msg;
+    errorDiv.classList.add('show');
+  }
+
+  // Si ya está autenticado, redirigir
+  if (localStorage.getItem('boafx_admin_token')) {
+    window.location.href = 'admin.html';
+  }
+</script>
+
+</body>
+</html>
