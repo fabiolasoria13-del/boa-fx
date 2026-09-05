@@ -317,24 +317,67 @@
       color: #5cdb7c;
     }
 
+    /* ---- MOBILE TOPBAR ---- */
+    .admin-topbar {
+      display: none;
+    }
+
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
       .admin-container {
         grid-template-columns: 1fr;
       }
 
+      /* Sidebar oculto por defecto en móvil */
       .admin-nav {
+        display: none;
+        position: fixed;
+        top: 56px;
+        left: 0;
+        right: 0;
+        bottom: 0;
         width: 100%;
-        height: auto;
-        position: relative;
+        height: calc(100vh - 56px);
+        z-index: 200;
+        overflow-y: auto;
         border-right: none;
+        border-top: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .admin-nav.mobile-open {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Topbar en móvil */
+      .admin-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        height: 56px;
+        background: var(--smoke);
         border-bottom: 1px solid rgba(255,255,255,0.06);
-        padding: 16px;
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 300;
+      }
+
+      .admin-topbar-logo img { height: 28px; width: auto; }
+
+      .admin-topbar-hamburger {
+        background: none;
+        border: none;
+        color: var(--ivory);
+        font-size: 22px;
+        cursor: pointer;
+        padding: 8px;
+        line-height: 1;
       }
 
       .admin-main {
         margin-left: 0;
-        padding: 24px 16px;
+        padding: 80px 16px 24px;
       }
 
       .admin-header {
@@ -344,15 +387,23 @@
       }
 
       .admin-card {
-        padding: 20px;
+        padding: 16px;
       }
     }
   </style>
 </head>
 <body>
 
+<!-- ---- TOPBAR MÓVIL ---- -->
+<div class="admin-topbar">
+  <a href="/" class="admin-topbar-logo">
+    <img src="logo.png" alt="BOA FX" onerror="this.style.display='none'">
+  </a>
+  <button class="admin-topbar-hamburger" id="adminHamburger" onclick="toggleMobileNav()">☰</button>
+</div>
+
 <!-- ---- NAV ---- -->
-<nav class="admin-nav">
+<nav class="admin-nav" id="adminNav">
   <!-- Logo -->
   <a href="/" class="admin-nav-logo-link" title="Ir al sitio">
     <img src="logo.png" alt="BOA FX" style="height:36px;width:auto;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -368,22 +419,22 @@
   <div style="font-family:var(--font-mono);font-size:10px;color:var(--ghost);letter-spacing:0.12em;margin-bottom:10px;padding-left:4px;">MENÚ</div>
   <ul class="admin-nav-menu">
     <li class="admin-nav-item">
-      <a class="admin-nav-link active" onclick="switchSection('dashboard')">
+      <a class="admin-nav-link active" onclick="switchSection('dashboard');closeMobileNav()">
         <span>📊</span> Dashboard
       </a>
     </li>
     <li class="admin-nav-item">
-      <a class="admin-nav-link" onclick="switchSection('productos')">
+      <a class="admin-nav-link" onclick="switchSection('productos');closeMobileNav()">
         <span>📦</span> Productos
       </a>
     </li>
     <li class="admin-nav-item">
-      <a class="admin-nav-link" onclick="switchSection('cursos')">
+      <a class="admin-nav-link" onclick="switchSection('cursos');closeMobileNav()">
         <span>🎬</span> Cursos
       </a>
     </li>
     <li class="admin-nav-item">
-      <a class="admin-nav-link" onclick="switchSection('preguntas')">
+      <a class="admin-nav-link" onclick="switchSection('preguntas');closeMobileNav()">
         <span>💬</span> Preguntas
       </a>
     </li>
@@ -391,7 +442,7 @@
 
   <!-- Acciones rápidas abajo -->
   <div class="admin-nav-logout">
-    <a class="admin-nav-link" href="/" target="_blank" style="color:var(--latex);">
+    <a class="admin-nav-link" href="/" target="_blank" style="color:var(--latex);" onclick="closeMobileNav()">
       <span>🌐</span> Ver sitio
     </a>
     <a class="admin-nav-link" onclick="logout()" style="color:#ff6b5b;">
@@ -602,6 +653,22 @@
   </div>
   <div style="font-size:12px;color:var(--ghost);text-align:center;">Arrastra para mover · Pellizca o usa la rueda para zoom</div>
 </div>
+
+<script>
+function toggleMobileNav() {
+  const nav = document.getElementById('adminNav');
+  const btn = document.getElementById('adminHamburger');
+  const open = nav.classList.toggle('mobile-open');
+  btn.textContent = open ? '✕' : '☰';
+}
+
+function closeMobileNav() {
+  const nav = document.getElementById('adminNav');
+  const btn = document.getElementById('adminHamburger');
+  nav.classList.remove('mobile-open');
+  btn.textContent = '☰';
+}
+</script>
 
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
