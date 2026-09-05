@@ -995,7 +995,7 @@ function acceptDisclaimer() {
 /* =============================================
    PRODUCTO DATA — CATÁLOGO COMPLETO BOA FX
 ============================================= */
-const PRODUCTS = [
+let PRODUCTS = [
   // ---- PROSTÉTICOS ----
   { name:'OJO',                        cat:'Prostéticos', price:220,    icon:'👁️', image:'imagenes/ojo.PNG' },
   { name:'PÓMULOS OPERADOS',           cat:'Prostéticos', price:450,    icon:'🎭' },
@@ -1617,6 +1617,25 @@ document.getElementById('sortSelect').addEventListener('change', function() {
 ============================================= */
 renderProducts();
 renderCart();
+</script>
+
+<!-- Firebase SDKs — se cargan al final para no bloquear el render inicial -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+// Una vez Firebase está listo, carga productos desde Firestore
+(async function() {
+  try {
+    const snap = await db.collection('productos').orderBy('cat').get();
+    if (!snap.empty) {
+      PRODUCTS = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderProducts();
+    }
+  } catch(e) {
+    // Firestore no disponible — el catálogo hardcoded ya está visible
+  }
+})();
 </script>
 </body>
 </html>

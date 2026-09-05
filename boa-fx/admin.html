@@ -469,14 +469,78 @@
   <section class="admin-section" id="productos">
     <div class="admin-alert" id="productosAlert"></div>
 
-    <div class="admin-card">
-      <div class="admin-card-title">Gestionar Productos</div>
-      <p style="color: var(--bone); margin-bottom: 20px;">
-        Los productos se editan directamente en el archivo HTML.<br>
-        <a href="/" style="color: var(--latex); text-decoration: underline;">Ir al sitio</a> para actualizar el catálogo.
-      </p>
-      <button class="admin-btn" onclick="window.open('/', '_blank')">Abrir Sitio</button>
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+      <div style="font-family:var(--font-display);font-size:28px;color:var(--ivory);">Productos del Catálogo</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="importarProductosBase()" id="importBtn">↓ Importar base</button>
+        <button class="admin-btn admin-btn-sm" onclick="mostrarFormProducto()">+ Agregar producto</button>
+      </div>
     </div>
+
+    <!-- Formulario agregar / editar (oculto por defecto) -->
+    <div class="admin-card" id="prodFormCard" style="display:none;margin-bottom:24px;">
+      <div class="admin-card-title" id="prodFormTitle">Nuevo Producto</div>
+      <form id="prodForm">
+        <input type="hidden" id="prodId">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="admin-form-group" style="grid-column:1/-1;">
+            <label class="admin-label">Nombre</label>
+            <input type="text" class="admin-input" id="prodNombre" placeholder="Ej: HERIDA DE BALA" required>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">Precio (MXN)</label>
+            <input type="number" class="admin-input" id="prodPrecio" placeholder="299" min="0" required>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">Categoría</label>
+            <select class="admin-select" id="prodCat">
+              <option value="Prostéticos">Prostéticos</option>
+              <option value="Complementos">Complementos</option>
+              <option value="Materiales">Materiales</option>
+              <option value="Servicios">Servicios</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">Icono (emoji)</label>
+            <input type="text" class="admin-input" id="prodIcon" placeholder="🩹">
+          </div>
+          <div class="admin-form-group" style="grid-column:1/-1;">
+            <label class="admin-label">Imagen (ruta)</label>
+            <input type="text" class="admin-input" id="prodImage" placeholder="imagenes/mi-producto.png">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-label">¿Cotización?</label>
+            <select class="admin-select" id="prodCotiza">
+              <option value="false">No — precio fijo</option>
+              <option value="true">Sí — cotizar</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:20px;">
+          <button type="submit" class="admin-btn">Guardar</button>
+          <button type="button" class="admin-btn admin-btn-secondary" onclick="cancelarFormProducto()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Buscador y filtro -->
+    <div style="display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+      <input type="text" class="admin-input" id="prodSearch" placeholder="Buscar..." oninput="renderProductosAdmin()" style="flex:1;min-width:160px;">
+      <select class="admin-select" id="prodCatFilter" onchange="renderProductosAdmin()" style="width:160px;">
+        <option value="">Todas las categorías</option>
+        <option value="Prostéticos">Prostéticos</option>
+        <option value="Complementos">Complementos</option>
+        <option value="Materiales">Materiales</option>
+        <option value="Servicios">Servicios</option>
+      </select>
+    </div>
+    <div id="prodCount" style="font-family:var(--font-mono);font-size:11px;color:var(--ghost);margin-bottom:16px;letter-spacing:0.08em;"></div>
+
+    <!-- Lista de productos -->
+    <ul class="admin-list" id="productosAdminList">
+      <li class="admin-list-item" style="color:var(--ghost);">Cargando productos...</li>
+    </ul>
   </section>
 
   <!-- PREGUNTAS -->
@@ -495,6 +559,10 @@
 
 </main>
 
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 <script src="admin.js"></script>
 
 </body>
