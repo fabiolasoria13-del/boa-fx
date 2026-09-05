@@ -247,11 +247,15 @@
   const loginBtn = document.getElementById('loginBtn');
   const errorDiv = document.getElementById('loginError');
 
-  // Credenciales (en producción, esto sería en backend)
   const ADMIN_USER = 'adminboa';
-  const ADMIN_PASS = 'Limited2000!';
+  const ADMIN_HASH = '7796104a15260fcd70695fc8ab3b7eeda61de95bfa224b481400a129ce35d233';
 
-  form.addEventListener('submit', (e) => {
+  async function hashPassword(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorDiv.classList.remove('show');
 
@@ -263,24 +267,22 @@
       return;
     }
 
-    // Simular pequeño delay para UX
     loginBtn.classList.add('loading');
     loginBtn.disabled = true;
 
-    setTimeout(() => {
-      if (user === ADMIN_USER && pass === ADMIN_PASS) {
-        // Éxito
-        localStorage.setItem('boafx_admin_token', 'authenticated_' + Date.now());
-        localStorage.setItem('boafx_admin_user', user);
-        window.location.href = 'admin.html';
-      } else {
-        showError('Usuario o contraseña incorrectos');
-        loginBtn.classList.remove('loading');
-        loginBtn.disabled = false;
-        passwordInput.value = '';
-        passwordInput.focus();
-      }
-    }, 600);
+    const passHash = await hashPassword(pass);
+
+    if (user === ADMIN_USER && passHash === ADMIN_HASH) {
+      localStorage.setItem('boafx_admin_token', 'authenticated_' + Date.now());
+      localStorage.setItem('boafx_admin_user', user);
+      window.location.href = 'admin.html';
+    } else {
+      showError('Usuario o contraseña incorrectos');
+      loginBtn.classList.remove('loading');
+      loginBtn.disabled = false;
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
   });
 
   function showError(msg) {
@@ -288,7 +290,6 @@
     errorDiv.classList.add('show');
   }
 
-  // Si ya está autenticado, redirigir
   if (localStorage.getItem('boafx_admin_token')) {
     window.location.href = 'admin.html';
   }

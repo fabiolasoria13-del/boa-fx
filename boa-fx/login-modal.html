@@ -1,0 +1,262 @@
+<!-- =============================================
+     LOGIN MODAL (insert before closing </body> tag)
+============================================= -->
+
+<style>
+  /* ---- LOGIN MODAL ---- */
+  .login-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .login-modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .login-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: min(420px, 100vw - 40px);
+    background: var(--smoke);
+    border: 1px solid rgba(255,255,255,0.06);
+    z-index: 1200;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .login-modal-overlay.open .login-modal {
+    opacity: 1;
+    pointer-events: all;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .login-modal-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .login-modal-title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    color: var(--ivory);
+  }
+
+  .login-modal-close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bone);
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .login-modal-close:hover {
+    color: var(--ivory);
+  }
+
+  .login-modal-body {
+    padding: 28px;
+  }
+
+  .login-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .login-tab {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .login-tab.active {
+    color: var(--ivory);
+    border-bottom-color: var(--tungsten);
+  }
+
+  .login-tab:hover:not(.active) {
+    color: var(--bone);
+  }
+
+  .login-error {
+    background: rgba(196, 30, 46, 0.15);
+    border: 1px solid rgba(196, 30, 46, 0.3);
+    color: #ff6b5b;
+    padding: 12px 14px;
+    font-size: 12px;
+    margin-bottom: 14px;
+    display: none;
+    border-radius: 2px;
+  }
+
+  .login-error.show {
+    display: block;
+  }
+
+  .login-form-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .login-label {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tungsten);
+  }
+
+  .login-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--ivory);
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    border-radius: 2px;
+  }
+
+  .login-input::placeholder {
+    color: var(--ghost);
+  }
+
+  .login-input:focus {
+    border-color: var(--tungsten);
+  }
+
+  .login-submit {
+    width: 100%;
+    background: var(--tungsten);
+    color: var(--void);
+    border: none;
+    padding: 12px 24px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 12px;
+    border-radius: 2px;
+  }
+
+  .login-submit:hover {
+    background: #e0253a;
+    transform: translateY(-1px);
+  }
+
+  .login-submit:disabled {
+    background: var(--ash);
+    color: var(--ghost);
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .login-footer {
+    text-align: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ghost);
+  }
+</style>
+
+<div class="login-modal-overlay" id="loginModal" onclick="if(event.target === this) closeLoginModal()">
+  <div class="login-modal">
+    <div class="login-modal-header">
+      <div class="login-modal-title">Ingresar</div>
+      <div class="login-modal-close" onclick="closeLoginModal()">✕</div>
+    </div>
+
+    <div class="login-modal-body">
+      <div class="login-tabs">
+        <div class="login-tab active" onclick="switchLoginTab('admin')">Admin</div>
+        <div class="login-tab" onclick="switchLoginTab('student')">Estudiante</div>
+      </div>
+
+      <div class="login-error" id="loginError"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <input type="hidden" id="loginType" value="admin">
+
+        <div class="login-form-group">
+          <label class="login-label">Usuario / Email</label>
+          <input
+            type="text"
+            class="login-input"
+            id="loginEmail"
+            placeholder="Ingresa tu usuario o email"
+            autocomplete="username"
+            required
+          />
+        </div>
+
+        <div class="login-form-group">
+          <label class="login-label">Contraseña</label>
+          <input
+            type="password"
+            class="login-input"
+            id="loginPassword"
+            placeholder="Ingresa tu contraseña"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="login-submit" id="loginSubmitBtn">Ingresar</button>
+      </form>
+
+      <div class="login-footer">
+        ✦ Sesión segura · Vercel
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchLoginTab(tab) {
+    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    document.getElementById('loginType').value = tab;
+    document.getElementById('loginEmail').placeholder = tab === 'admin' 
+      ? 'Usuario admin' 
+      : 'Tu email registrado';
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('loginForm').reset();
+  }
+</script>
