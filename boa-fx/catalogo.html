@@ -232,6 +232,21 @@
       cursor: pointer;
     }
     .prod-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.12); }
+    .prod-card.no-disponible { opacity: 0.5; pointer-events: none; }
+    .prod-card.no-disponible .prod-thumb::after {
+      content: 'NO DISPONIBLE';
+      position: absolute;
+      inset: 0;
+      background: rgba(12,11,10,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      color: var(--ivory);
+      z-index: 3;
+    }
     .prod-thumb {
       position: relative;
       aspect-ratio: 1 / 1;
@@ -1521,7 +1536,7 @@ function renderProducts() {
     const isCotiza = !!p.cotiza;
     const card = document.createElement('div');
     const tienePreview = p.imageHover && (p.cat === 'Prostéticos' || p.name === 'CALVA LÁTEX');
-    card.className = `prod-card${p.cat === 'Servicios' ? ' servicio-card' : ''}${tienePreview ? ' con-preview' : ''}`;
+    card.className = `prod-card${p.cat === 'Servicios' ? ' servicio-card' : ''}${tienePreview ? ' con-preview' : ''}${p.disponible === false ? ' no-disponible' : ''}`;
     card.style.cursor = 'pointer';
 
     card.innerHTML = `

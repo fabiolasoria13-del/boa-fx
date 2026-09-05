@@ -428,7 +428,13 @@ function renderProductosAdmin() {
           <div class="admin-list-item-meta">${p.cat} · ${p.cotiza ? 'Cotización' : '$' + (p.price || 0) + ' MXN'}</div>
         </div>
       </div>
-      <div class="admin-list-item-actions" style="flex-shrink:0;">
+      <div class="admin-list-item-actions" style="flex-shrink:0;flex-wrap:wrap;gap:6px;">
+        <button class="admin-btn admin-btn-sm ${p.disponible === false ? '' : 'admin-btn-secondary'}"
+          onclick="toggleDisponible('${p.id}', ${p.disponible === false})"
+          style="${p.disponible === false ? 'background:#8B0000;' : ''}"
+          title="${p.disponible === false ? 'Activar producto' : 'Marcar no disponible'}">
+          ${p.disponible === false ? '✗ No disp.' : '✓ Disponible'}
+        </button>
         <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="editarProducto('${p.id}')">Editar</button>
         <button class="admin-btn admin-btn-sm admin-btn-danger" onclick="eliminarProducto('${p.id}', '${p.name.replace(/'/g,"\\'")}')">Eliminar</button>
       </div>
@@ -579,6 +585,51 @@ const PRODUCTOS_BASE = [
   { name:'PROSTÉTICO PERSONALIZADO', cat:'Servicios', price:0, cotiza:true, icon:'🎭', image:'imagenes/prostetico-personalizado.png' },
   { name:'PROP / COMPLEMENTO PARA PRODUCCIÓN O COSPLAY', cat:'Servicios', price:0, cotiza:true, icon:'🎬', image:'imagenes/prop-complemento-para-produccion.png' },
 ];
+
+async function toggleDisponible(id, activar) {
+  try {
+    await db.collection('productos').doc(id).update({ disponible: activar });
+    cargarProductosAdmin();
+  } catch(e) {
+    showAlert('productosAlert', 'Error: ' + e.message);
+  }
+}
+
+async function limpiarYReimportar() {
+  if (!confirm(`⚠️ Esto borrará TODOS los productos de Firestore y volverá a importar los ${PRODUCTOS_BASE.length} productos base. ¿Continuar?`)) return;
+
+  const btn = document.getElementById('importBtn');
+  btn.disabled = true;
+  btn.textContent = 'Limpiando...';
+
+  try {
+    // Borrar todos los productos existentes
+    const snap = await db.collection('productos').get();
+    const deleteBatch = db.batch();
+    snap.docs.forEach(doc => deleteBatch.delete(doc.ref));
+    await deleteBatch.commit();
+
+    btn.textContent = 'Importando...';
+
+    // Reimportar base limpia
+    const batch = db.batch();
+    PRODUCTOS_BASE.forEach(p => {
+      const ref = db.collection('productos').doc();
+      const data = {};
+      Object.keys(p).forEach(k => { if (p[k] !== undefined) data[k] = p[k]; });
+      batch.set(ref, data);
+    });
+    await batch.commit();
+
+    showAlert('productosAlert', `Catálogo limpiado y reimportado (${PRODUCTOS_BASE.length} productos) ✓`, 'success');
+    cargarProductosAdmin();
+  } catch(e) {
+    showAlert('productosAlert', 'Error: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '↓ Importar base';
+  }
+}
 
 async function importarProductosBase() {
   if (!confirm(`¿Importar ${PRODUCTOS_BASE.length} productos a Firestore? Esto no borra los existentes.`)) return;
