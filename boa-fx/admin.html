@@ -572,18 +572,13 @@
             <input type="text" class="admin-input" id="prodIcon" placeholder="🩹">
           </div>
           <div class="admin-form-group" style="grid-column:1/-1;">
-            <label class="admin-label">Imagen</label>
-            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-              <input type="text" class="admin-input" id="prodImage" placeholder="URL o ruta de imagen" style="flex:1;min-width:160px;">
-              <label class="admin-btn admin-btn-secondary admin-btn-sm" style="cursor:pointer;margin:0;">
-                📷 Subir foto
-                <input type="file" id="prodImageFile" accept="image/*" style="display:none;" onchange="subirImagenCloudinary(this)">
-              </label>
-            </div>
-            <div id="prodImagePreview" style="margin-top:10px;display:none;">
-              <img id="prodImagePreviewImg" style="max-width:120px;max-height:120px;object-fit:cover;border:1px solid rgba(255,255,255,0.1);">
-              <div id="prodImageUploadStatus" style="font-size:12px;color:var(--bone);margin-top:6px;"></div>
-            </div>
+            <label class="admin-label">Fotos del producto <span style="font-weight:400;color:var(--ghost);text-transform:none;letter-spacing:0;">(la primera es la principal, la segunda aparece al pasar el cursor)</span></label>
+            <div id="prodImagesGrid" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;"></div>
+            <label class="admin-btn admin-btn-secondary admin-btn-sm" style="cursor:pointer;margin:0;display:inline-flex;align-items:center;gap:6px;">
+              📷 Agregar foto
+              <input type="file" id="prodImageFile" accept="image/*" style="display:none;" onchange="subirImagenCloudinary(this)">
+            </label>
+            <div id="prodImageUploadStatus" style="font-size:12px;color:var(--bone);margin-top:8px;"></div>
           </div>
           <div class="admin-form-group">
             <label class="admin-label">¿Cotización?</label>

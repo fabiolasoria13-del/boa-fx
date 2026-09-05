@@ -234,7 +234,7 @@
     .prod-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.12); }
     .prod-card.no-disponible { opacity: 0.5; pointer-events: none; }
     .prod-card.no-disponible .prod-thumb::after {
-      content: 'NO DISPONIBLE';
+      content: 'ESTAMOS EN RESTOCK · NO DISPONIBLE';
       position: absolute;
       inset: 0;
       background: rgba(12,11,10,0.7);
@@ -1535,15 +1535,18 @@ function renderProducts() {
   list.forEach(p => {
     const isCotiza = !!p.cotiza;
     const card = document.createElement('div');
-    const tienePreview = p.imageHover && (p.cat === 'Prostéticos' || p.name === 'CALVA LÁTEX');
+    // Soporte para array de imágenes (nuevo) y campos sueltos (legacy)
+    const imgPrimary = (p.images && p.images[0]) || p.image || null;
+    const imgHover   = (p.images && p.images[1]) || p.imageHover || null;
+    const tienePreview = imgHover && (p.cat === 'Prostéticos' || p.name === 'CALVA LÁTEX');
     card.className = `prod-card${p.cat === 'Servicios' ? ' servicio-card' : ''}${tienePreview ? ' con-preview' : ''}${p.disponible === false ? ' no-disponible' : ''}`;
     card.style.cursor = 'pointer';
 
     card.innerHTML = `
-      <div class="prod-thumb ${p.image ? '' : thumbClass(p.cat)}" style="${p.image ? 'background:#0a0908;' : ''}">
-        ${p.image ? `
-          <img class="prod-img-primary" src="${p.image}" alt="${p.name}" style="${p.imgFit ? `object-fit:${p.imgFit};padding:${p.imgPad||'12px'}` : ''}${p.imgPos ? `;object-position:${p.imgPos}` : ''}">
-          ${p.imageHover ? `<img class="prod-img-hover" src="${p.imageHover}" alt="${p.name} resultado">` : ''}
+      <div class="prod-thumb ${imgPrimary ? '' : thumbClass(p.cat)}" style="${imgPrimary ? 'background:#0a0908;' : ''}">
+        ${imgPrimary ? `
+          <img class="prod-img-primary" src="${imgPrimary}" alt="${p.name}" style="${p.imgFit ? `object-fit:${p.imgFit};padding:${p.imgPad||'12px'}` : ''}${p.imgPos ? `;object-position:${p.imgPos}` : ''}">
+          ${imgHover ? `<img class="prod-img-hover" src="${imgHover}" alt="${p.name} resultado">` : ''}
           ${tienePreview ? `<span class="prod-hover-hint">VER RESULTADO →</span>` : ''}
         ` : `<div class="prod-icon">${p.icon}</div>`}
         <span class="prod-badge ${badgeClass(p.cat)}">${badgeLabel(p.cat)}</span>

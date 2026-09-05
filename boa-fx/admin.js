@@ -286,13 +286,49 @@ function exportData() {
 console.log('✓ Admin panel loaded');
 
 // ========================================
-// CLOUDINARY — SUBIR IMÁGENES
+// CLOUDINARY — SUBIR IMÁGENES MÚLTIPLES
 // ========================================
 
 const CLOUDINARY_CLOUD = 'hqeox93o';
 const CLOUDINARY_PRESET = 'boafx-productos';
 
 let cropperInstance = null;
+let prodImagesArray = [];
+
+function renderImagesGrid() {
+  const grid = document.getElementById('prodImagesGrid');
+  if (!grid) return;
+
+  if (prodImagesArray.length === 0) {
+    grid.innerHTML = '<span style="font-size:12px;color:var(--ghost);">Sin fotos aún. Agrega al menos una.</span>';
+    return;
+  }
+
+  grid.innerHTML = prodImagesArray.map((url, i) => `
+    <div style="position:relative;width:90px;flex-shrink:0;">
+      <img src="${url}" style="width:90px;height:90px;object-fit:cover;border:2px solid ${i === 0 ? 'var(--tungsten)' : 'rgba(255,255,255,0.12)'};display:block;">
+      ${i === 0 ? '<div style="position:absolute;top:0;left:0;background:var(--tungsten);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;letter-spacing:.05em;">PRINCIPAL</div>' : ''}
+      ${i === 1 ? '<div style="position:absolute;top:0;left:0;background:#555;color:#fff;font-size:9px;font-weight:700;padding:2px 5px;letter-spacing:.05em;">HOVER</div>' : ''}
+      <div style="display:flex;gap:1px;margin-top:3px;">
+        ${i > 0 ? `<button onclick="moverImagen(${i},-1)" style="flex:1;background:rgba(255,255,255,0.08);border:none;color:var(--ivory);cursor:pointer;padding:3px;font-size:12px;">◀</button>` : '<span style="flex:1;"></span>'}
+        ${i < prodImagesArray.length-1 ? `<button onclick="moverImagen(${i},1)" style="flex:1;background:rgba(255,255,255,0.08);border:none;color:var(--ivory);cursor:pointer;padding:3px;font-size:12px;">▶</button>` : '<span style="flex:1;"></span>'}
+        <button onclick="eliminarImagen(${i})" style="flex:1;background:rgba(196,30,46,0.3);border:none;color:#ff6b5b;cursor:pointer;padding:3px;font-size:12px;">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function moverImagen(idx, dir) {
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= prodImagesArray.length) return;
+  [prodImagesArray[idx], prodImagesArray[newIdx]] = [prodImagesArray[newIdx], prodImagesArray[idx]];
+  renderImagesGrid();
+}
+
+function eliminarImagen(idx) {
+  prodImagesArray.splice(idx, 1);
+  renderImagesGrid();
+}
 
 function subirImagenCloudinary(input) {
   const file = input.files[0];
@@ -303,7 +339,6 @@ function subirImagenCloudinary(input) {
     const modal = document.getElementById('cropModal');
     const cropImg = document.getElementById('cropImage');
 
-    // Destruir cropper anterior si existe
     if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
 
     cropImg.src = e.target.result;
@@ -311,7 +346,7 @@ function subirImagenCloudinary(input) {
 
     setTimeout(() => {
       cropperInstance = new Cropper(cropImg, {
-        aspectRatio: 1,         // cuadrado (como el catálogo)
+        aspectRatio: 1,
         viewMode: 2,
         dragMode: 'move',
         autoCropArea: 0.9,
@@ -339,24 +374,16 @@ async function confirmarCrop() {
   if (!cropperInstance) return;
 
   const status = document.getElementById('prodImageUploadStatus');
-  const preview = document.getElementById('prodImagePreview');
-  const previewImg = document.getElementById('prodImagePreviewImg');
 
-  // Cerrar modal
   document.getElementById('cropModal').style.display = 'none';
 
-  // Obtener canvas recortado
   const canvas = cropperInstance.getCroppedCanvas({ width: 800, height: 800 });
   cropperInstance.destroy();
   cropperInstance = null;
 
-  // Mostrar preview local
-  previewImg.src = canvas.toDataURL();
-  preview.style.display = 'block';
   status.textContent = 'Subiendo imagen...';
   status.style.color = 'var(--bone)';
 
-  // Convertir canvas a blob y subir
   canvas.toBlob(async (blob) => {
     const formData = new FormData();
     formData.append('file', blob, 'producto.jpg');
@@ -370,9 +397,11 @@ async function confirmarCrop() {
       const data = await res.json();
 
       if (data.secure_url) {
-        document.getElementById('prodImage').value = data.secure_url;
-        status.textContent = '✓ Imagen subida correctamente';
+        prodImagesArray.push(data.secure_url);
+        renderImagesGrid();
+        status.textContent = '✓ Foto agregada';
         status.style.color = '#5cdb7c';
+        document.getElementById('prodImageFile').value = '';
       } else {
         throw new Error(data.error?.message || 'Error desconocido');
       }
@@ -422,7 +451,7 @@ function renderProductosAdmin() {
   list.innerHTML = filtered.map(p => `
     <li class="admin-list-item">
       <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
-        ${p.image ? `<img src="${p.image}" style="width:40px;height:40px;object-fit:cover;border-radius:2px;flex-shrink:0;">` : `<span style="font-size:22px;flex-shrink:0;">${p.icon || '📦'}</span>`}
+        ${(p.images?.[0] || p.image) ? `<img src="${p.images?.[0] || p.image}" style="width:40px;height:40px;object-fit:cover;border-radius:2px;flex-shrink:0;">` : `<span style="font-size:22px;flex-shrink:0;">${p.icon || '📦'}</span>`}
         <div style="min-width:0;">
           <div class="admin-list-item-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
           <div class="admin-list-item-meta">${p.cat} · ${p.cotiza ? 'Cotización' : '$' + (p.price || 0) + ' MXN'}</div>
@@ -450,18 +479,25 @@ function mostrarFormProducto(prod = null) {
   document.getElementById('prodPrecio').value = prod?.price || '';
   document.getElementById('prodCat').value = prod?.cat || 'Prostéticos';
   document.getElementById('prodIcon').value = prod?.icon || '';
-  document.getElementById('prodImage').value = prod?.image || '';
   document.getElementById('prodCotiza').value = prod?.cotiza ? 'true' : 'false';
   document.getElementById('prodImageFile').value = '';
-  const preview = document.getElementById('prodImagePreview');
-  const previewImg = document.getElementById('prodImagePreviewImg');
-  if (prod?.image) {
-    previewImg.src = prod.image;
-    preview.style.display = 'block';
-    document.getElementById('prodImageUploadStatus').textContent = '';
+  document.getElementById('prodImageUploadStatus').textContent = '';
+
+  // Cargar fotos existentes al array
+  if (prod) {
+    if (prod.images && prod.images.length) {
+      prodImagesArray = [...prod.images];
+    } else if (prod.image) {
+      prodImagesArray = [prod.image];
+      if (prod.imageHover) prodImagesArray.push(prod.imageHover);
+    } else {
+      prodImagesArray = [];
+    }
   } else {
-    preview.style.display = 'none';
+    prodImagesArray = [];
   }
+  renderImagesGrid();
+
   document.getElementById('prodNombre').focus();
   document.getElementById('prodFormCard').scrollIntoView({ behavior: 'smooth' });
 }
@@ -469,8 +505,9 @@ function mostrarFormProducto(prod = null) {
 function cancelarFormProducto() {
   document.getElementById('prodFormCard').style.display = 'none';
   document.getElementById('prodForm').reset();
-  document.getElementById('prodImagePreview').style.display = 'none';
   document.getElementById('prodImageFile').value = '';
+  prodImagesArray = [];
+  renderImagesGrid();
 }
 
 function editarProducto(id) {
@@ -667,11 +704,16 @@ document.addEventListener('DOMContentLoaded', () => {
         price: parseInt(document.getElementById('prodPrecio').value) || 0,
         cat: document.getElementById('prodCat').value,
         icon: document.getElementById('prodIcon').value.trim() || '📦',
-        image: document.getElementById('prodImage').value.trim(),
         cotiza: document.getElementById('prodCotiza').value === 'true',
       };
-      if (!data.image) delete data.image;
       if (!data.cotiza) delete data.cotiza;
+
+      // Guardar array de imágenes; compatibilidad: también guarda `image` con la primera
+      if (prodImagesArray.length > 0) {
+        data.images = [...prodImagesArray];
+        data.image = prodImagesArray[0];
+        if (prodImagesArray[1]) data.imageHover = prodImagesArray[1];
+      }
 
       try {
         if (id) {
