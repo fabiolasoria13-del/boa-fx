@@ -52,15 +52,14 @@
       z-index: 100;
     }
 
-    .admin-nav-logo {
-      font-family: var(--font-display);
-      font-size: 20px;
-      letter-spacing: 0.06em;
-      margin-bottom: 32px;
-      color: var(--ivory);
+    .admin-nav-logo-link {
+      display: block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s;
     }
-
-    .admin-nav-logo b { color: var(--tungsten); }
+    .admin-nav-logo-link:hover { opacity: 1; }
 
     .admin-nav-menu {
       list-style: none;
@@ -354,16 +353,23 @@
 
 <!-- ---- NAV ---- -->
 <nav class="admin-nav">
-  <div class="admin-nav-logo">BOA <b>FX</b></div>
+  <!-- Logo -->
+  <a href="/" class="admin-nav-logo-link" title="Ir al sitio">
+    <img src="logo.png" alt="BOA FX" style="height:36px;width:auto;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span style="display:none;font-family:var(--font-display);font-size:20px;letter-spacing:0.06em;color:var(--ivory);">BOA <b style="color:var(--tungsten);">FX</b></span>
+  </a>
+
+  <!-- Usuario conectado -->
+  <div style="font-family:var(--font-mono);font-size:10px;color:var(--ghost);letter-spacing:0.1em;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.06);">
+    <span id="adminUserName" style="color:var(--bone);"></span><br>Panel de administración
+  </div>
+
+  <!-- Menú principal -->
+  <div style="font-family:var(--font-mono);font-size:10px;color:var(--ghost);letter-spacing:0.12em;margin-bottom:10px;padding-left:4px;">MENÚ</div>
   <ul class="admin-nav-menu">
     <li class="admin-nav-item">
       <a class="admin-nav-link active" onclick="switchSection('dashboard')">
         <span>📊</span> Dashboard
-      </a>
-    </li>
-    <li class="admin-nav-item">
-      <a class="admin-nav-link" onclick="switchSection('cursos')">
-        <span>📚</span> Cursos
       </a>
     </li>
     <li class="admin-nav-item">
@@ -372,14 +378,24 @@
       </a>
     </li>
     <li class="admin-nav-item">
+      <a class="admin-nav-link" onclick="switchSection('cursos')">
+        <span>🎬</span> Cursos
+      </a>
+    </li>
+    <li class="admin-nav-item">
       <a class="admin-nav-link" onclick="switchSection('preguntas')">
-        <span>❓</span> Preguntas
+        <span>💬</span> Preguntas
       </a>
     </li>
   </ul>
+
+  <!-- Acciones rápidas abajo -->
   <div class="admin-nav-logout">
-    <a class="admin-nav-link" onclick="logout()">
-      <span>🚪</span> Salir
+    <a class="admin-nav-link" href="/" target="_blank" style="color:var(--latex);">
+      <span>🌐</span> Ver sitio
+    </a>
+    <a class="admin-nav-link" onclick="logout()" style="color:#ff6b5b;">
+      <span>🚪</span> Cerrar sesión
     </a>
   </div>
 </nav>
@@ -473,7 +489,6 @@
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
       <div style="font-family:var(--font-display);font-size:28px;color:var(--ivory);">Productos del Catálogo</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="limpiarYReimportar()" id="importBtn" style="color:#ff6b5b;border-color:rgba(255,107,91,0.3);">⚠ Limpiar y reimportar</button>
         <button class="admin-btn admin-btn-sm" onclick="mostrarFormProducto()">+ Agregar producto</button>
       </div>
     </div>
