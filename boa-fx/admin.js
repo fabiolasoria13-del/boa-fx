@@ -480,6 +480,7 @@ function mostrarFormProducto(prod = null) {
   document.getElementById('prodCat').value = prod?.cat || 'Prostéticos';
   document.getElementById('prodIcon').value = prod?.icon || '';
   document.getElementById('prodCotiza').value = prod?.cotiza ? 'true' : 'false';
+  document.getElementById('prodNota').value = prod?.nota || '';
   document.getElementById('prodImageFile').value = '';
   document.getElementById('prodImageUploadStatus').textContent = '';
 
@@ -705,8 +706,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cat: document.getElementById('prodCat').value,
         icon: document.getElementById('prodIcon').value.trim() || '📦',
         cotiza: document.getElementById('prodCotiza').value === 'true',
+        nota: document.getElementById('prodNota').value.trim(),
       };
       if (!data.cotiza) delete data.cotiza;
+      if (!data.nota) delete data.nota;
 
       // Guardar array de imágenes; compatibilidad: también guarda `image` con la primera
       if (prodImagesArray.length > 0) {

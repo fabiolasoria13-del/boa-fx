@@ -748,6 +748,32 @@
     .modal-wa-btn:hover { background: #20b958; }
     .modal-wa-btn svg { width: 16px; height: 16px; fill: #fff; }
     .modal-wa-note { font-family: var(--font-mono); font-size: 10px; color: var(--ghost); text-align: center; margin-top: 10px; letter-spacing: 0.08em; }
+    .modal-advertencia {
+      background: rgba(196,30,46,0.08);
+      border: 1px solid rgba(196,30,46,0.25);
+      border-left: 3px solid var(--tungsten);
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--bone);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+    .modal-advertencia::before { content: '⚠️  '; }
+    .prod-nota-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(196,30,46,0.85);
+      color: #fff;
+      font-size: 13px;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      pointer-events: none;
+    }
 
     /* PRE-PAINTED CHECKBOX */
     .prepaint-option {
@@ -841,6 +867,7 @@
       <div class="modal-divider"></div>
       <div class="modal-specs-title">ESPECIFICACIONES</div>
       <div class="modal-specs" id="modalSpecs"></div>
+      <div id="modalAdvertencia" class="modal-advertencia" style="display:none;"></div>
       <div class="modal-actions" id="modalActions"></div>
       <p class="modal-wa-note" id="modalNote"></p>
     </div>
@@ -1436,6 +1463,15 @@ function openModal(p) {
     : '<p style="font-size:13px;color:var(--ghost);">Contáctanos para más información.</p>';
 
   // Actions
+  // Nota / advertencia personalizada
+  const advEl = document.getElementById('modalAdvertencia');
+  if (p.nota) {
+    advEl.textContent = p.nota;
+    advEl.style.display = 'block';
+  } else {
+    advEl.style.display = 'none';
+  }
+
   const actionsEl = document.getElementById('modalActions');
   const noteEl    = document.getElementById('modalNote');
 
@@ -1543,13 +1579,14 @@ function renderProducts() {
     card.style.cursor = 'pointer';
 
     card.innerHTML = `
-      <div class="prod-thumb ${imgPrimary ? '' : thumbClass(p.cat)}" style="${imgPrimary ? 'background:#0a0908;' : ''}">
+      <div class="prod-thumb ${imgPrimary ? '' : thumbClass(p.cat)}" style="${imgPrimary ? 'background:#0a0908;' : ''}position:relative;">
         ${imgPrimary ? `
           <img class="prod-img-primary" src="${imgPrimary}" alt="${p.name}" style="${p.imgFit ? `object-fit:${p.imgFit};padding:${p.imgPad||'12px'}` : ''}${p.imgPos ? `;object-position:${p.imgPos}` : ''}">
           ${imgHover ? `<img class="prod-img-hover" src="${imgHover}" alt="${p.name} resultado">` : ''}
           ${tienePreview ? `<span class="prod-hover-hint">VER RESULTADO →</span>` : ''}
         ` : `<div class="prod-icon">${p.icon}</div>`}
         <span class="prod-badge ${badgeClass(p.cat)}">${badgeLabel(p.cat)}</span>
+        ${p.nota ? `<div class="prod-nota-badge" title="${p.nota.replace(/"/g,'&quot;')}">⚠</div>` : ''}
       </div>
       <div class="prod-body">
         <div class="prod-name">${p.name}</div>
