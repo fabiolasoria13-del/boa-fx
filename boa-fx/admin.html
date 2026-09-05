@@ -506,8 +506,18 @@
             <input type="text" class="admin-input" id="prodIcon" placeholder="🩹">
           </div>
           <div class="admin-form-group" style="grid-column:1/-1;">
-            <label class="admin-label">Imagen (ruta)</label>
-            <input type="text" class="admin-input" id="prodImage" placeholder="imagenes/mi-producto.png">
+            <label class="admin-label">Imagen</label>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+              <input type="text" class="admin-input" id="prodImage" placeholder="URL o ruta de imagen" style="flex:1;min-width:160px;">
+              <label class="admin-btn admin-btn-secondary admin-btn-sm" style="cursor:pointer;margin:0;">
+                📷 Subir foto
+                <input type="file" id="prodImageFile" accept="image/*" style="display:none;" onchange="subirImagenCloudinary(this)">
+              </label>
+            </div>
+            <div id="prodImagePreview" style="margin-top:10px;display:none;">
+              <img id="prodImagePreviewImg" style="max-width:120px;max-height:120px;object-fit:cover;border:1px solid rgba(255,255,255,0.1);">
+              <div id="prodImageUploadStatus" style="font-size:12px;color:var(--bone);margin-top:6px;"></div>
+            </div>
           </div>
           <div class="admin-form-group">
             <label class="admin-label">¿Cotización?</label>
@@ -558,6 +568,25 @@
   </section>
 
 </main>
+
+<!-- Cropper.js para recortar imágenes -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+
+<!-- Modal de recorte -->
+<div id="cropModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="font-family:var(--font-display);font-size:22px;color:var(--ivory);letter-spacing:0.06em;">ENCUADRA TU FOTO</div>
+  <div style="max-width:90vw;max-height:60vh;overflow:hidden;">
+    <img id="cropImage" style="max-width:100%;display:block;">
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+    <button onclick="rotarCrop(-90)" class="admin-btn admin-btn-secondary admin-btn-sm">↺ Rotar</button>
+    <button onclick="rotarCrop(90)" class="admin-btn admin-btn-secondary admin-btn-sm">↻ Rotar</button>
+    <button onclick="confirmarCrop()" class="admin-btn admin-btn-sm">✓ Confirmar y subir</button>
+    <button onclick="cancelarCrop()" class="admin-btn admin-btn-secondary admin-btn-sm">Cancelar</button>
+  </div>
+  <div style="font-size:12px;color:var(--ghost);text-align:center;">Arrastra para mover · Pellizca o usa la rueda para zoom</div>
+</div>
 
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>

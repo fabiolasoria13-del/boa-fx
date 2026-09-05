@@ -286,6 +286,104 @@ function exportData() {
 console.log('✓ Admin panel loaded');
 
 // ========================================
+// CLOUDINARY — SUBIR IMÁGENES
+// ========================================
+
+const CLOUDINARY_CLOUD = 'hqeox93o';
+const CLOUDINARY_PRESET = 'boafx-productos';
+
+let cropperInstance = null;
+
+function subirImagenCloudinary(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const modal = document.getElementById('cropModal');
+    const cropImg = document.getElementById('cropImage');
+
+    // Destruir cropper anterior si existe
+    if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+
+    cropImg.src = e.target.result;
+    modal.style.display = 'flex';
+
+    setTimeout(() => {
+      cropperInstance = new Cropper(cropImg, {
+        aspectRatio: 1,         // cuadrado (como el catálogo)
+        viewMode: 2,
+        dragMode: 'move',
+        autoCropArea: 0.9,
+        responsive: true,
+        movable: true,
+        zoomable: true,
+        rotatable: true,
+      });
+    }, 100);
+  };
+  reader.readAsDataURL(file);
+}
+
+function rotarCrop(grados) {
+  if (cropperInstance) cropperInstance.rotate(grados);
+}
+
+function cancelarCrop() {
+  document.getElementById('cropModal').style.display = 'none';
+  if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+  document.getElementById('prodImageFile').value = '';
+}
+
+async function confirmarCrop() {
+  if (!cropperInstance) return;
+
+  const status = document.getElementById('prodImageUploadStatus');
+  const preview = document.getElementById('prodImagePreview');
+  const previewImg = document.getElementById('prodImagePreviewImg');
+
+  // Cerrar modal
+  document.getElementById('cropModal').style.display = 'none';
+
+  // Obtener canvas recortado
+  const canvas = cropperInstance.getCroppedCanvas({ width: 800, height: 800 });
+  cropperInstance.destroy();
+  cropperInstance = null;
+
+  // Mostrar preview local
+  previewImg.src = canvas.toDataURL();
+  preview.style.display = 'block';
+  status.textContent = 'Subiendo imagen...';
+  status.style.color = 'var(--bone)';
+
+  // Convertir canvas a blob y subir
+  canvas.toBlob(async (blob) => {
+    const formData = new FormData();
+    formData.append('file', blob, 'producto.jpg');
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+
+      if (data.secure_url) {
+        document.getElementById('prodImage').value = data.secure_url;
+        status.textContent = '✓ Imagen subida correctamente';
+        status.style.color = '#5cdb7c';
+      } else {
+        throw new Error(data.error?.message || 'Error desconocido');
+      }
+    } catch(e) {
+      status.textContent = '✗ Error al subir: ' + e.message;
+      status.style.color = '#ff6b5b';
+    }
+  }, 'image/jpeg', 0.9);
+}
+
+// ========================================
 // PRODUCTOS — FIRESTORE CRUD
 // ========================================
 
@@ -348,6 +446,16 @@ function mostrarFormProducto(prod = null) {
   document.getElementById('prodIcon').value = prod?.icon || '';
   document.getElementById('prodImage').value = prod?.image || '';
   document.getElementById('prodCotiza').value = prod?.cotiza ? 'true' : 'false';
+  document.getElementById('prodImageFile').value = '';
+  const preview = document.getElementById('prodImagePreview');
+  const previewImg = document.getElementById('prodImagePreviewImg');
+  if (prod?.image) {
+    previewImg.src = prod.image;
+    preview.style.display = 'block';
+    document.getElementById('prodImageUploadStatus').textContent = '';
+  } else {
+    preview.style.display = 'none';
+  }
   document.getElementById('prodNombre').focus();
   document.getElementById('prodFormCard').scrollIntoView({ behavior: 'smooth' });
 }
@@ -355,6 +463,8 @@ function mostrarFormProducto(prod = null) {
 function cancelarFormProducto() {
   document.getElementById('prodFormCard').style.display = 'none';
   document.getElementById('prodForm').reset();
+  document.getElementById('prodImagePreview').style.display = 'none';
+  document.getElementById('prodImageFile').value = '';
 }
 
 function editarProducto(id) {
