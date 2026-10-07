@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Catálogo: cualquiera puede verlo, solo la cuenta admin puede editarlo
+    match /productos/{id} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.email == 'fabiolasoria13@gmail.com';
+    }
+    // Todo lo demás cerrado
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -446,7 +446,8 @@
       .filter-tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; width: 100%; padding-bottom: 2px; }
       .filter-tabs::-webkit-scrollbar { display: none; }
       .filter-tab { flex-shrink: 0; min-height: 36px; }
-      .filter-sort { display: none; }
+      .filter-sort { margin-left: 0; width: 100%; }
+      .filter-sort select { flex: 1; min-height: 36px; font-size: 12px; }
 
       .catalog-hero { padding-top: calc(64px + 8px); padding-bottom: 12px; }
       .catalog-hero-title, .catalog-hero-label { display: none; }
@@ -977,9 +978,10 @@
       <div class="filter-sort">
         <label for="sortSelect">Ordenar:</label>
         <select id="sortSelect">
+          <option value="recent">Más recientes</option>
           <option value="az">A → Z</option>
-          <option value="price-asc">Precio ↑</option>
-          <option value="price-desc">Precio ↓</option>
+          <option value="price-asc">Precio: menor a mayor</option>
+          <option value="price-desc">Precio: mayor a menor</option>
         </select>
       </div>
     </div>
@@ -1270,6 +1272,25 @@ function sendToWhatsApp() {
 ============================================= */
 function generateSpecs(p) {
   const n = p.name.toUpperCase();
+  if (n.includes('CALVA')) {
+    if (n.includes('GLATZAN')) return [
+      { l:'TIPO',       v: 'Calva de Glatzan' },
+      { l:'MATERIAL',   v: 'Glatzan' },
+      { l:'APLICACIÓN', v: 'Prosaide o adhesivo para piel' },
+      { l:'USO',        v: 'Caracterización, cosplay, teatro' },
+    ];
+    if (n.includes('LÁTEX') || n.includes('LATEX')) return [
+      { l:'TIPO',       v: 'Calva de látex' },
+      { l:'MATERIAL',   v: 'Látex natural' },
+      { l:'APLICACIÓN', v: 'Prosaide o adhesivo para piel' },
+      { l:'USO',        v: 'Caracterización, cosplay, teatro' },
+    ];
+    return [
+      { l:'TIPO',       v: 'Calva para caracterización' },
+      { l:'APLICACIÓN', v: 'Prosaide o adhesivo para piel' },
+      { l:'USO',        v: 'Caracterización, cosplay, teatro' },
+    ];
+  }
   if (p.cat === 'Servicios') {
     const info = {
       'CARACTERIZACIÓN':    [{ l:'MODALIDAD', v:'Presencial — CDMX' }, { l:'DURACIÓN', v:'Variable según el personaje' }, { l:'INCLUYE', v:'Maquillaje artístico completo + prostéticos si aplica' }],
@@ -1320,12 +1341,6 @@ function generateSpecs(p) {
         { l:'COMPATIBLE CON',v: 'Piel, textiles y accesorios' },
       ];
     }
-    if (n.includes('CALVA')) return [
-      { l:'TIPO',       v: 'Calva de látex' },
-      { l:'MATERIAL',   v: 'Látex natural' },
-      { l:'APLICACIÓN', v: 'Prosaide o adhesivo para piel' },
-      { l:'USO',        v: 'Caracterización, cosplay, teatro' },
-    ];
     return [{ l:'CATEGORÍA', v: 'Complemento FX' }, { l:'USO', v: 'Maquillaje artístico y efectos especiales' }];
   }
   if (p.cat === 'Materiales') {
@@ -1537,8 +1552,15 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDi
    RENDER PRODUCTS
 ============================================= */
 let currentCat  = 'Todos';
-let currentSort = 'az';
+let currentSort = 'recent';
 let currentQ    = '';
+
+function fechaMs(p) {
+  const c = p.createdAt;
+  if (!c) return 0;
+  if (typeof c.toMillis === 'function') return c.toMillis();
+  return new Date(c).getTime() || 0;
+}
 
 function getFiltered() {
   let list = [...PRODUCTS];
@@ -1550,6 +1572,9 @@ function getFiltered() {
   if (currentSort === 'price-asc')  list.sort((a,b) => a.price - b.price);
   if (currentSort === 'price-desc') list.sort((a,b) => b.price - a.price);
   if (currentSort === 'az')         list.sort((a,b) => a.name.localeCompare(b.name, 'es'));
+  // Más recientes: los que tienen fecha de publicación van primero (nuevo → viejo);
+  // los productos viejos sin fecha quedan después, en orden alfabético
+  if (currentSort === 'recent')     list.sort((a,b) => (fechaMs(b) - fechaMs(a)) || a.name.localeCompare(b.name, 'es'));
   return list;
 }
 
@@ -1574,7 +1599,7 @@ function renderProducts() {
     // Soporte para array de imágenes (nuevo) y campos sueltos (legacy)
     const imgPrimary = (p.images && p.images[0]) || p.image || null;
     const imgHover   = (p.images && p.images[1]) || p.imageHover || null;
-    const tienePreview = imgHover && (p.cat === 'Prostéticos' || p.name === 'CALVA LÁTEX');
+    const tienePreview = imgHover && (p.cat === 'Prostéticos' || p.name.toUpperCase().includes('CALVA'));
     card.className = `prod-card${p.cat === 'Servicios' ? ' servicio-card' : ''}${tienePreview ? ' con-preview' : ''}${p.disponible === false ? ' no-disponible' : ''}`;
     card.style.cursor = 'pointer';
 
@@ -1688,7 +1713,9 @@ renderCart();
       renderProducts();
     }
   } catch(e) {
-    // Firestore no disponible — el catálogo hardcoded ya está visible
+    // Firestore no disponible — el catálogo hardcoded ya está visible,
+    // pero dejamos el error en consola para poder diagnosticarlo
+    console.error('No se pudieron cargar los productos de Firestore:', e);
   }
 })();
 </script>

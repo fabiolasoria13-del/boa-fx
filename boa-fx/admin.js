@@ -13,6 +13,16 @@ function checkAuth() {
   }
   
   document.getElementById('adminUserName').textContent = user;
+
+  // La sesión real es la de Firebase Auth: sin ella Firestore rechaza
+  // cualquier cambio en productos, así que regresamos al login
+  firebase.auth().onAuthStateChanged(fbUser => {
+    if (!fbUser) {
+      localStorage.removeItem('boafx_admin_token');
+      localStorage.removeItem('boafx_admin_user');
+      window.location.href = 'admin-login.html';
+    }
+  });
   return true;
 }
 
@@ -21,7 +31,9 @@ function logout() {
   if (confirm('¿Estás seguro de que quieres salir?')) {
     localStorage.removeItem('boafx_admin_token');
     localStorage.removeItem('boafx_admin_user');
-    window.location.href = 'admin-login.html';
+    firebase.auth().signOut().finally(() => {
+      window.location.href = 'admin-login.html';
+    });
   }
 }
 
@@ -422,10 +434,136 @@ async function cargarProductosAdmin() {
   try {
     const snap = await db.collection('productos').orderBy('cat').get();
     PRODUCTOS_ADMIN = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    rellenarFechasFaltantes();
     renderProductosAdmin();
     updateStats();
   } catch(e) {
     showAlert('productosAlert', 'Error al cargar productos: ' + e.message);
+  }
+}
+
+// Fechas de publicación de los productos creados antes de que se guardara
+// `createdAt` (tomadas de Firestore, 2026-10-06). Se aplican una sola vez para
+// que el orden "Más recientes" del catálogo funcione con los productos viejos.
+const FECHAS_PRODUCTOS_VIEJOS = {
+  '0bG9LLPg0eVQvhmX42JY': '2026-09-05T03:30:43Z',
+  '1xGZUTh11JRjWuQmcG3z': '2026-09-05T03:30:43Z',
+  '3hffCeLrZRmfdldkFleE': '2026-09-05T03:30:43Z',
+  '6ZRigqiOHBTRtgXChXQG': '2026-09-05T03:30:43Z',
+  '6ghYgvJG6QfTTCjquKsw': '2026-09-05T03:30:43Z',
+  '6uBq1VpUIVLOiUuOmzBa': '2026-09-05T03:30:43Z',
+  '6yQnBNtvNGOwP6ulF7VL': '2026-09-05T03:30:43Z',
+  '74yhTaElZG9frORpILiN': '2026-09-05T03:30:43Z',
+  '77DntkFHzvvgkL5DcUUk': '2026-09-05T03:30:43Z',
+  '8OdfDTXM33Bf0eJibVK0': '2026-09-05T03:30:43Z',
+  '9B3Hkh3OCzyS50uNOyUv': '2026-09-05T03:30:43Z',
+  '9xh490mIaAAq7qHKNRrm': '2026-09-05T03:30:43Z',
+  'A7luNoN7HSts824LSyLT': '2026-09-05T03:30:43Z',
+  'AMU52e5Cz9NIIAbu7ghM': '2026-09-05T03:30:43Z',
+  'C78GR0jszSacp9QW3yw7': '2026-09-05T03:30:43Z',
+  'E0Db3fezdLthOc7YVLgb': '2026-09-05T03:30:43Z',
+  'EhFBYtoULcsEpEdVfcLD': '2026-09-05T03:30:43Z',
+  'EwdAawunG6YBkUvWqXkw': '2026-09-05T03:30:43Z',
+  'H9gVzbvinhKkYOgMN0XR': '2026-09-05T03:30:43Z',
+  'HzcKG0bhVc054x6B9BoL': '2026-09-05T03:30:43Z',
+  'I0sWTT1ZGJBSQBNYlkrB': '2026-09-05T03:30:43Z',
+  'IsSayiXcg2kK6qi9CVLb': '2026-09-05T03:30:43Z',
+  'IsyKx9JYC9LvYH4lpLIa': '2026-09-05T03:30:43Z',
+  'J5AuGMTzwMsKZNrCU20q': '2026-09-05T03:30:43Z',
+  'LFSzJbVWryzKYsQ9Awbx': '2026-09-05T03:30:43Z',
+  'LcjUVrPhiCaDMlYUDovO': '2026-09-05T03:30:43Z',
+  'Lwcs2gv3xMn3TC2n58L6': '2026-09-05T03:30:43Z',
+  'MClaq8nutiqWKVm9KNpy': '2026-09-05T03:30:43Z',
+  'MDT6LQYV1up5uGSMbAvL': '2026-09-05T03:30:43Z',
+  'NLHbvHGErAgaDppFMaFB': '2026-09-05T03:30:43Z',
+  'NQXetz8RiyD67JNK1E3N': '2026-09-05T03:30:43Z',
+  'NU6X5kwsll8lnRMIfPiD': '2026-09-05T03:30:43Z',
+  'OPdHacug88rjR0GlYNxX': '2026-09-05T03:30:43Z',
+  'QhMfTLERywvEpOGZMMDw': '2026-09-05T03:30:43Z',
+  'SQJlnabmxsGP1bmgdFyL': '2026-09-05T03:30:43Z',
+  'T1sxuubKgWrSSSj6IZc8': '2026-09-05T03:30:43Z',
+  'TFFmUp4G5X17zN04W5uj': '2026-09-05T03:30:43Z',
+  'TPF3FhqTqHck98Q507Gz': '2026-09-05T03:30:43Z',
+  'ULBmiYDXv5qraLv87H0H': '2026-09-05T03:30:43Z',
+  'Uh25XvGFu6wxyEehcjzS': '2026-09-05T03:30:43Z',
+  'Uns8b53olhlaVpkPECoI': '2026-09-05T03:30:43Z',
+  'VH8TVwl2eu0qVerjdS3W': '2026-09-05T03:30:43Z',
+  'W1JxN2kSUKLUzOZGMESk': '2026-09-05T03:30:43Z',
+  'WFe0np4Qo8p7Kky2WCW7': '2026-09-05T03:30:43Z',
+  'WuxF55W0VGKBAA5kmK87': '2026-09-05T03:30:43Z',
+  'X47mUCwMrRSge5ZassHe': '2026-09-05T03:30:43Z',
+  'XVHEKsmK4sMc2pdBTbLR': '2026-09-05T03:30:43Z',
+  'Xpd52VEpGsbHzxkzFWml': '2026-09-05T03:30:43Z',
+  'YRXQYzxpY8mByRwjmb3P': '2026-09-05T03:30:43Z',
+  'ZEUgpK70yfXxfvQOnXzb': '2026-09-05T03:30:43Z',
+  'a8I48DqH1XXdoC1murXQ': '2026-09-05T03:30:43Z',
+  'b16JljmE7CaYejaoZk3C': '2026-09-05T03:30:43Z',
+  'bmqOeBjrohczrp1w9qP1': '2026-09-05T03:30:43Z',
+  'c0JNjkCofFMT0WVRCOKJ': '2026-09-05T03:30:43Z',
+  'cgHWblYnEuE70duciShJ': '2026-09-05T03:30:43Z',
+  'ctuDupq4TZxgyNGYX2rK': '2026-09-05T03:30:43Z',
+  'dSfoJAKqWGObLPrtUttq': '2026-09-05T03:30:43Z',
+  'eM6BxXFcuExsDLsyaspn': '2026-09-05T03:30:43Z',
+  'eOm9IqTj8e1gbbtJeRUe': '2026-09-05T03:30:43Z',
+  'f9lml9VQHyou09MlX8Kq': '2026-09-05T03:30:43Z',
+  'fEfo0QHFCBXPcX6Sg7zQ': '2026-09-05T03:30:43Z',
+  'g4lzF2LWswTAibsMHwdi': '2026-09-05T03:30:43Z',
+  'gdO3QmIjyQW33Gg7NULW': '2026-09-05T03:30:43Z',
+  'geNJfJkDjZ5v9H96tb7b': '2026-09-05T03:30:43Z',
+  'h7tQVPtYl5dhPlg6RJc9': '2026-09-05T03:30:43Z',
+  'hK4e0lEak9jkYjNA2o5p': '2026-09-05T03:30:43Z',
+  'hrCHZH7Ag4hmjXKV7w02': '2026-09-05T03:30:43Z',
+  'iE1wrLTgw2QznIZf0IMw': '2026-09-05T03:30:43Z',
+  'ixcEzovqzc46l0j2xobo': '2026-09-05T03:30:43Z',
+  'kpJkmTblQfQJ5s4EOLyl': '2026-09-05T03:30:43Z',
+  'lItFRVxnnUP5cEzsPVZk': '2026-09-05T03:30:43Z',
+  'lXYMZt0OLuOnklkXTDqA': '2026-09-05T03:30:43Z',
+  'lbfQ8G9LWdR0L9cb9G6m': '2026-09-05T03:30:43Z',
+  'leq3S3XJOchaCSUW7aEU': '2026-09-05T03:30:43Z',
+  'lpyxGvQfSUlaKNPihhB3': '2026-09-05T03:30:43Z',
+  'nEPOCaUObRvkhWGPPuRm': '2026-09-05T03:30:43Z',
+  'pLzP2S9QUGCBSsds3BFH': '2026-09-05T03:30:43Z',
+  'qDieWGZWQlXtjYwQPzFB': '2026-09-05T03:30:43Z',
+  'qk2fIsKWCvXbw7UL6fzG': '2026-09-05T03:30:43Z',
+  'r7SYNNjRlBjTt0woIJoC': '2026-09-05T03:30:43Z',
+  's9R70lvUxE19J3FSc9VU': '2026-09-05T03:30:43Z',
+  'stZnYAByw1FntseN7Z0M': '2026-09-05T03:30:43Z',
+  'vibqvdOWCZdxwpHNavlj': '2026-09-05T03:30:43Z',
+  'wZAmfAyKLos7WBCH87qU': '2026-09-05T03:30:43Z',
+  'x20YZ4HjPM1oWogtCM6o': '2026-09-05T03:30:43Z',
+  'xE1o6XMn781zgqeoDJqU': '2026-09-05T03:30:43Z',
+  'xPnxNB6zbhRuH2UDgUDy': '2026-09-05T03:30:43Z',
+  'xTxlwMLt4OMWy8EkO9JL': '2026-09-05T03:30:43Z',
+  'zaQKXcPZsD2DPbYs4ioA': '2026-09-05T03:30:43Z',
+  'zsf0rDgGHAvE58RibbQP': '2026-09-05T03:30:43Z',
+  'NxKQMwPH1zAVhaBUFFwa': '2026-09-05T04:01:03Z',
+  'NP11mGTtbtPphv9A2lZc': '2026-09-07T07:06:13Z',
+  'uWbCZXXzS6KG8C5tguVZ': '2026-09-07T07:09:30Z',
+  'bJk9GjKeiaBTO450H806': '2026-09-07T07:13:15Z',
+  'VvUGqO09Ne85Sck4q0i9': '2026-09-07T07:32:06Z',
+  'XPFjxGiyJPn7YyCisXoz': '2026-09-09T03:02:19Z',
+  'jnDC4ZGeHfIF9pH5RFSe': '2026-09-12T04:28:56Z',
+  'siiCA5yTw0AbYEB8RIfq': '2026-09-25T07:10:22Z',
+  'BdXXkh03OMa8lu5Odpvq': '2026-09-26T06:49:47Z',
+  'epPflrKfdQFzNzBajjnW': '2026-09-26T06:51:17Z',
+  'hxRyMP39evvF9sRaRM9p': '2026-09-29T08:07:13Z',
+  '9RMAh5EAJvZCsfFhX89z': '2026-09-29T16:07:35Z',
+  'uPFaauYwngXOXXKPCyR7': '2026-10-01T21:14:25Z'
+};
+
+async function rellenarFechasFaltantes() {
+  const pendientes = PRODUCTOS_ADMIN.filter(p => !p.createdAt && FECHAS_PRODUCTOS_VIEJOS[p.id]);
+  if (pendientes.length === 0) return;
+  try {
+    const batch = db.batch();
+    pendientes.forEach(p => {
+      const fecha = firebase.firestore.Timestamp.fromDate(new Date(FECHAS_PRODUCTOS_VIEJOS[p.id]));
+      batch.update(db.collection('productos').doc(p.id), { createdAt: fecha });
+      p.createdAt = fecha;
+    });
+    await batch.commit();
+  } catch(e) {
+    console.error('No se pudieron rellenar las fechas de publicación:', e);
   }
 }
 
@@ -723,6 +861,7 @@ document.addEventListener('DOMContentLoaded', () => {
           await db.collection('productos').doc(id).update(data);
           showAlert('productosAlert', `"${data.name}" actualizado ✓`, 'success');
         } else {
+          data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
           await db.collection('productos').add(data);
           showAlert('productosAlert', `"${data.name}" agregado ✓`, 'success');
         }

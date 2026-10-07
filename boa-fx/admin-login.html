@@ -209,12 +209,12 @@
 
   <form class="login-form" id="loginForm">
     <div class="form-group">
-      <label class="form-label">Usuario</label>
+      <label class="form-label">Correo</label>
       <input
-        type="text"
+        type="email"
         class="form-input"
         id="username"
-        placeholder="Ingresa tu usuario"
+        placeholder="Ingresa tu correo"
         autocomplete="username"
         required
       />
@@ -241,20 +241,16 @@
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
 <script>
   const form = document.getElementById('loginForm');
   const usernameInput = document.getElementById('username');
   const passwordInput = document.getElementById('password');
   const loginBtn = document.getElementById('loginBtn');
   const errorDiv = document.getElementById('loginError');
-
-  const ADMIN_USER = 'adminboa';
-  const ADMIN_HASH = '7796104a15260fcd70695fc8ab3b7eeda61de95bfa224b481400a129ce35d233';
-
-  async function hashPassword(str) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -271,14 +267,15 @@
     loginBtn.classList.add('loading');
     loginBtn.disabled = true;
 
-    const passHash = await hashPassword(pass);
-
-    if (user === ADMIN_USER && passHash === ADMIN_HASH) {
+    try {
+      // Firebase Auth: las reglas de Firestore solo permiten editar productos
+      // a la cuenta de administración
+      await firebase.auth().signInWithEmailAndPassword(user, pass);
       localStorage.setItem('boafx_admin_token', 'authenticated_' + Date.now());
       localStorage.setItem('boafx_admin_user', user);
       window.location.href = 'admin.html';
-    } else {
-      showError('Usuario o contraseña incorrectos');
+    } catch (err) {
+      showError('Correo o contraseña incorrectos');
       loginBtn.classList.remove('loading');
       loginBtn.disabled = false;
       passwordInput.value = '';
@@ -291,9 +288,11 @@
     errorDiv.classList.add('show');
   }
 
-  if (localStorage.getItem('boafx_admin_token')) {
-    window.location.href = 'admin.html';
-  }
+  firebase.auth().onAuthStateChanged(fbUser => {
+    if (fbUser && localStorage.getItem('boafx_admin_token')) {
+      window.location.href = 'admin.html';
+    }
+  });
 </script>
 
 </body>
