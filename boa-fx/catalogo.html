@@ -73,7 +73,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .nav-logo { display: flex; align-items: center; }
-    .nav-logo img { height: 64px; width: auto; object-fit: contain; }
+    .nav-logo img { height: 48px; width: auto; object-fit: contain; }
     .nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
     .nav-links a { font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--bone); transition: color 0.2s; }
     .nav-links a:hover, .nav-links a.active { color: var(--ivory); }
@@ -99,13 +99,17 @@
     .nav-cart-count { position: absolute; top: -6px; right: -8px; background: var(--tungsten); color: var(--ivory); font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
     .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
     .nav-hamburger span { display: block; width: 24px; height: 1.5px; background: var(--ivory); transition: all 0.3s; }
+    /* Con el menú abierto la hamburguesa se vuelve ✕ (la ✕ suelta quedaba tapada por el nav) */
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
     /* Mobile menu */
-    .nav-mobile { display: none; position: fixed; inset: 0; background: rgba(12,11,10,0.98); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
+    .nav-mobile { display: none; position: fixed; inset: 0; background: rgba(12,11,10,0.98); z-index: 999; flex-direction: column; align-items: center; justify-content: safe center; gap: clamp(14px, 3.5vh, 32px); padding: 88px 20px 32px; overflow-y: auto; }
     .nav-mobile.open { display: flex; }
-    .nav-mobile a { font-family: var(--font-display); font-size: 38px; color: var(--ivory); letter-spacing: 0.04em; transition: color 0.2s; }
+    .nav-mobile a { font-family: var(--font-display); font-size: clamp(26px, 6vh, 38px); color: var(--ivory); letter-spacing: 0.04em; transition: color 0.2s; }
     .nav-mobile a:hover { color: var(--tungsten); }
-    .nav-mobile-close { position: absolute; top: 24px; right: clamp(20px,4vw,80px); font-size: 28px; color: var(--bone); cursor: pointer; }
+    .nav-mobile-close { display: none !important; position: absolute; top: 24px; right: clamp(20px,4vw,80px); font-size: 28px; color: var(--bone); cursor: pointer; }
 
     /* ============ CATALOG HERO ============ */
     .catalog-hero {
@@ -439,7 +443,7 @@
       .prod-icon { font-size: 28px; }
       .nav-links, .nav-wa { display: none; }
       .nav-hamburger { display: flex; }
-      .nav-logo img { height: 44px; }
+      .nav-logo img { height: 38px; }
 
       .filter-inner { flex-direction: column; gap: 8px; align-items: stretch; }
       .filter-search { max-width: 100%; flex: none; width: 100%; }
@@ -905,7 +909,7 @@
 <!-- ====== NAV ====== -->
 <nav id="nav">
   <a href="index.html" class="nav-logo">
-    <img src="logo.png" alt="BOA FX" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <img src="logo-nav.png" alt="BOA FX" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
     <span style="display:none;font-family:var(--font-display);font-size:26px;letter-spacing:0.06em;color:var(--ivory);">BOA <b style="color:var(--tungsten)">FX</b></span>
   </a>
   <ul class="nav-links">
@@ -1189,9 +1193,12 @@ function openCart()   { cartDrawer.classList.add('open'); cartOverlay.classList.
 function closeCart()  { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); document.body.style.overflow=''; }
 
 document.getElementById('navCartBtn').addEventListener('click', openCart);
-document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileMenu').classList.add('open'));
-document.getElementById('mobileClose').addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
-function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+document.getElementById('hamburger').addEventListener('click', function() {
+  const abierto = document.getElementById('mobileMenu').classList.toggle('open');
+  this.classList.toggle('open', abierto);
+});
+document.getElementById('mobileClose').addEventListener('click', () => closeMobile());
+function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); document.getElementById('hamburger').classList.remove('open'); }
 
 function renderCart() {
   const total = cart.reduce((s,i) => s + i.price * i.qty, 0);

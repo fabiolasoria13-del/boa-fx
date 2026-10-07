@@ -251,7 +251,7 @@
       align-items: center;
     }
     .nav-logo img {
-      height: 216px;
+      height: 64px;
       width: auto;
       object-fit: contain;
       /* El logo tiene fondo negro — mix-blend-mode lo hace transparente sobre dark bg */
@@ -372,6 +372,11 @@
       background: var(--ivory);
       transition: all 0.3s;
     }
+    /* Con el menú abierto la hamburguesa se vuelve ✕ (la ✕ suelta quedaba tapada por el nav) */
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .nav-mobile-close { display: none !important; }
 
     /* Mobile menu */
     .nav-mobile {
@@ -382,13 +387,16 @@
       z-index: 999;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 32px;
+      /* "safe" evita que se corten las opciones si la ventana es bajita */
+      justify-content: safe center;
+      gap: clamp(14px, 3.5vh, 32px);
+      padding: 88px 20px 32px;
+      overflow-y: auto;
     }
     .nav-mobile.open { display: flex; }
     .nav-mobile a {
       font-family: var(--font-display);
-      font-size: 42px;
+      font-size: clamp(26px, 6vh, 42px);
       color: var(--ivory);
       letter-spacing: 0.04em;
       transition: color 0.2s;
@@ -407,11 +415,13 @@
     ============================================= */
     #hero {
       position: relative;
-      height: 100svh;
-      min-height: 600px;
+      min-height: max(100svh, 600px);
       display: flex;
       align-items: flex-end;
-      padding-bottom: clamp(48px, 7vh, 100px);
+      /* padding-top deja libre el espacio del menú fijo */
+      padding-top: 120px;
+      /* deja espacio abajo para "BOA FX · Arte para artistas" */
+      padding-bottom: clamp(100px, 13vh, 140px);
       overflow: hidden;
     }
     .hero-bg {
@@ -481,7 +491,7 @@
       width: 100%;
     }
     .hero-label { margin-bottom: 20px; }
-    .hero-title { margin-bottom: 24px; }
+    .hero-title { margin-bottom: 24px; font-size: clamp(56px, min(12vw, 13vh), 160px); }
     .hero-title span { display: block; }
     .hero-title .accent { color: var(--tungsten); }
     .hero-sub {
@@ -1391,7 +1401,18 @@
     /* =============================================
        RESPONSIVE — TABLET 768px
     ============================================= */
+    /* Ventanas bajitas (navegador no maximizado): se quita la firma
+       "BOA FX · Arte para artistas" para que el hero quepa completo */
+    @media (max-height: 780px) {
+      .hero-proof { display: none; }
+      #hero { padding-bottom: 48px; }
+    }
+
     @media (max-width: 1024px) {
+      /* el menú completo ya no cabe: pasa a hamburguesa */
+      .nav-links { display: none; }
+      .nav-wa { display: none; }
+      .nav-hamburger { display: flex; }
       .productos-grid { grid-template-columns: repeat(2, 1fr); }
       .materiales-grid { grid-template-columns: repeat(2, 1fr); }
       .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
@@ -1407,10 +1428,7 @@
     @media (max-width: 768px) {
       #cursos .container > div { grid-template-columns: 1fr !important; gap: 40px; }
       #cursos .reveal:last-child { grid-template-columns: 1fr !important; }
-      .nav-links { display: none; }
-      .nav-wa { display: none; }
-      .nav-hamburger { display: flex; }
-      .nav-logo img { height: 52px; }
+      .nav-logo img { height: 48px; }
 
       .section { padding: 64px 0; }
       .section-sm { padding: 44px 0; }
@@ -1419,6 +1437,7 @@
       .display-l  { font-size: clamp(38px, 6vw, 56px); }
 
       .hero-proof { display: none; }
+      #hero { padding-top: 96px; padding-bottom: 48px; }
       .hero-sub { max-width: 100%; }
       .hero-tagline { font-size: 14px; }
 
@@ -1477,7 +1496,7 @@
     }
 
     @media (max-width: 480px) {
-      .nav-logo img { height: 44px; }
+      .nav-logo img { height: 40px; }
 
       .section { padding: 48px 0; }
       .section-sm { padding: 32px 0; }
@@ -1554,7 +1573,7 @@
 ============================================= -->
 <nav id="nav">
   <a href="/" class="nav-logo">
-    <img src="logo.png" alt="BOA FX — Makeup and Visual Effects" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <img src="logo-nav.png" alt="BOA FX — Makeup and Visual Effects" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
     <span style="display:none;font-family:var(--font-display);font-size:26px;letter-spacing:0.06em;color:var(--ivory);">BOA <b style="color:var(--tungsten)">FX</b></span>
   </a>
 
@@ -2019,9 +2038,12 @@
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
   const mobileClose = document.getElementById('mobileClose');
-  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
-  mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
-  function closeMobile() { mobileMenu.classList.remove('open'); }
+  hamburger.addEventListener('click', () => {
+    const abierto = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', abierto);
+  });
+  mobileClose.addEventListener('click', closeMobile);
+  function closeMobile() { mobileMenu.classList.remove('open'); hamburger.classList.remove('open'); }
 
   /* ---- INTERSECTION OBSERVER (reveal) ---- */
   const revealEls = document.querySelectorAll('.reveal');
