@@ -22,6 +22,8 @@
   <meta name="twitter:description" content="Prostéticos de silicona y materiales FX fabricados en México." />
   <meta name="twitter:image" content="https://boafx.mx/imagenes/hero-bg.jpg" />
 
+  <!-- La foto de portada es lo primero que se ve: se pide antes que todo lo demás -->
+  <link rel="preload" as="image" href="imagenes/hero-bg.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -1626,7 +1628,7 @@
      HERO
 ============================================= -->
 <section id="hero">
-  <div class="hero-video-ph" id="heroBg" style="background-image: url('imagenes/hero-bg.jpg'); background-size: cover; background-position: center 60%;"></div>
+  <div class="hero-video-ph" id="heroBg" style="background-image: url('imagenes/hero-bg.webp'); background-size: cover; background-position: center 60%;"></div>
   <!-- Smoke orbs -->
   <div class="smoke-orb smoke-orb-1"></div>
   <div class="smoke-orb smoke-orb-2"></div>
@@ -1719,7 +1721,7 @@
     <div class="trans-grid">
       <div class="trans-card trans-card-large reveal">
         <div class="trans-img" style="height:100%;min-height:300px;background:#0a0908;position:relative;overflow:hidden;">
-          <img src="imagenes/hibrido-humano.png" alt="Híbrido Humano / Araña — BOA FX"
+          <img loading="lazy" decoding="async" src="imagenes/hibrido-humano.webp" alt="Híbrido Humano / Araña — BOA FX"
                style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
         </div>
         <div class="trans-hover">
@@ -1730,7 +1732,7 @@
       </div>
       <div class="trans-card reveal reveal-delay-1">
         <div class="trans-img" style="min-height:300px;background:#0a0908;position:relative;overflow:hidden;">
-          <img src="imagenes/resultado-arañazo-sarpazo.jpeg" alt="Rasguño / Arañazo resultado — BOA FX"
+          <img loading="lazy" decoding="async" src="imagenes/resultado-arañazo-sarpazo.webp" alt="Rasguño / Arañazo resultado — BOA FX"
                style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;">
         </div>
         <div class="trans-hover">
@@ -1741,7 +1743,7 @@
       </div>
       <div class="trans-card reveal reveal-delay-2">
         <div class="trans-img" style="min-height:300px;background:#0a0908;position:relative;overflow:hidden;">
-          <img src="imagenes/resultado-nariz-terrifier-bruja.jpeg" alt="Nariz Terrifier Bruja resultado — BOA FX"
+          <img loading="lazy" decoding="async" src="imagenes/resultado-nariz-terrifier-bruja.webp" alt="Nariz Terrifier Bruja resultado — BOA FX"
                style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;">
         </div>
         <div class="trans-hover">
@@ -1752,7 +1754,7 @@
       </div>
       <div class="trans-card trans-card-wide reveal">
         <div class="trans-img" style="min-height:300px;background:#0a0908;position:relative;overflow:hidden;">
-          <img src="imagenes/cuernos-resultado.PNG" alt="Cuernos resultado — BOA FX"
+          <img loading="lazy" decoding="async" src="imagenes/cuernos-resultado.webp" alt="Cuernos resultado — BOA FX"
                style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
         </div>
         <div class="trans-hover">
@@ -1786,7 +1788,7 @@
       <div class="prod-card reveal" data-name="LÁTEX NATURAL 1 LT" data-price="290" data-cat="Materiales">
         <div class="prod-img-wrap">
           <div class="prod-img" style="height:100%;background:#0a0908;overflow:hidden;">
-            <img src="imagenes/latex-1-litro.png" alt="Látex Natural 1 LT" style="width:100%;height:100%;object-fit:cover;display:block;">
+            <img loading="lazy" decoding="async" src="imagenes/latex-1-litro.webp" alt="Látex Natural 1 LT" style="width:100%;height:100%;object-fit:cover;display:block;">
           </div>
           <span class="prod-badge badge-fav">Más vendido</span>
         </div>
@@ -1803,7 +1805,7 @@
       <div class="prod-card reveal reveal-delay-1" data-name="CALVA LÁTEX" data-price="250" data-cat="Complementos">
         <div class="prod-img-wrap">
           <div class="prod-img" style="height:100%;background:#0a0908;overflow:hidden;">
-            <img src="imagenes/calva-latex.png" alt="Calva Látex" style="width:100%;height:100%;object-fit:cover;display:block;">
+            <img loading="lazy" decoding="async" src="imagenes/calva-latex.webp" alt="Calva Látex" style="width:100%;height:100%;object-fit:cover;display:block;">
           </div>
           <span class="prod-badge badge-fav">Más vendido</span>
         </div>
@@ -1820,7 +1822,7 @@
       <div class="prod-card reveal reveal-delay-2" data-name="CUERNOS (2 PZ)" data-price="499" data-cat="Prostéticos">
         <div class="prod-img-wrap">
           <div class="prod-img" style="height:100%;background:#0a0908;overflow:hidden;">
-            <img src="imagenes/cuernos.png" alt="Cuernos 2 pz" style="width:100%;height:100%;object-fit:cover;display:block;">
+            <img loading="lazy" decoding="async" src="imagenes/cuernos.webp" alt="Cuernos 2 pz" style="width:100%;height:100%;object-fit:cover;display:block;">
           </div>
           <span class="prod-badge badge-fav">Más vendido</span>
         </div>
@@ -1837,7 +1839,7 @@
       <div class="prod-card reveal reveal-delay-3" data-name="DRAGON SKIN KIT 10" data-price="990" data-cat="Materiales">
         <div class="prod-img-wrap">
           <div class="prod-img" style="height:100%;background:#0a0908;overflow:hidden;">
-            <img src="imagenes/dragon-skin-kit.png" alt="Dragon Skin Kit 10" style="width:100%;height:100%;object-fit:cover;display:block;">
+            <img loading="lazy" decoding="async" src="imagenes/dragon-skin-kit.webp" alt="Dragon Skin Kit 10" style="width:100%;height:100%;object-fit:cover;display:block;">
           </div>
           <span class="prod-badge badge-pro">Pro</span>
         </div>
